@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Range | SMK CAR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c0c0c;
+            --accent: #D71920;
+            --text: #ffffff;
+            --text-dim: #888888;
+            --sidebar-w: 280px;
+            --list-w: 320px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- TEXT HOVER HIGHLIGHTS --- */
+        h1, h2, h3, p, span, .sidebar-logo, .nav-item, .model-item-name, .model-title-large, .brand-logo-txt {
+            transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        }
+        h1:hover, h2:hover, h3:hover, .model-title-large:hover, .sidebar-logo:hover {
+            color: #fff !important;
+            text-shadow: 0 0 20px #D71920, 0 0 40px rgba(215,25,32,0.6);
+            transform: translateY(-2px);
+        }
+        p:hover, span:hover, .nav-item:hover, .model-item-name:hover, .brand-logo-txt:hover {
+            color: #fff !important;
+            text-shadow: 0 0 15px rgba(215,25,32,0.4);
+            transform: scale(1.02);
+        }
+        
+        /* 3D Viewer Style */
+        model-viewer {
+            width: 100%; height: 100%; background: transparent;
+            --poster-color: transparent;
+        }
+
+        /* --- LAYOUT --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: var(--sidebar-w) var(--list-w) 1fr;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            background: #000;
+            padding: 40px;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column;
+        }
+        .sidebar-logo {
+            font-size: 20px; font-weight: 900; letter-spacing: 0.4em;
+            text-decoration: none; color: #fff; margin-bottom: 80px;
+        }
+        .sidebar-logo span { color: var(--accent); }
+        
+        .sidebar-section-label {
+            font-size: 10px; font-weight: 800; color: #444;
+            letter-spacing: 0.4em; text-transform: uppercase; margin-bottom: 30px;
+        }
+        .nav-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px 0; color: var(--text-dim); text-decoration: none;
+            font-size: 14px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; transition: 0.3s;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .nav-item:hover, .nav-item.active { color: #fff; }
+        .nav-item svg { width: 14px; height: 14px; opacity: 0.3; transition: 0.3s; }
+        .nav-item:hover svg, .nav-item.active svg { opacity: 1; transform: translateX(5px); }
+
+        /* --- MODEL LIST --- */
+        .model-list-panel {
+            background: #080808;
+            padding: 60px 0;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+        .list-header {
+            padding: 0 40px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .list-header h2 { font-size: 16px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; }
+        .list-header svg { width: 14px; height: 14px; transform: rotate(180deg); }
+
+        .list-scrollable {
+            flex: 1; overflow-y: auto; padding-right: 10px;
+        }
+        .list-scrollable::-webkit-scrollbar { width: 3px; }
+        .list-scrollable::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+        .model-item {
+            padding: 20px 40px; border-bottom: 1px solid rgba(255,255,255,0.02);
+            cursor: pointer; transition: 0.4s cubic-bezier(0.19,1,0.22,1);
+            position: relative;
+        }
+        .model-item:hover { background: rgba(255,255,255,0.02); }
+        .model-item.active { background: rgba(255,255,255,0.04); }
+        .model-item.active::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent);
+        }
+        .model-item-name {
+            font-size: 15px; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--text-dim); transition: 0.3s;
+        }
+        .model-item.active .model-item-name, .model-item:hover .model-item-name { color: #fff; }
+
+        /* --- MAIN VIEWER --- */
+        .main-viewer {
+            position: relative; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 0; background: #0c0c0c;
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #0c0c0c 70%);
+            overflow: hidden;
+        }
+        
+        /* --- ADVANCED HUD UI --- */
+        .viewer-header {
+            position: absolute; top: 80px; text-align: center;
+            z-index: 20; pointer-events: none;
+            animation: headerReveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        @keyframes headerReveal {
+            0% { opacity: 0; transform: translateY(-30px); filter: blur(10px); letter-spacing: 2em; }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); letter-spacing: normal; }
+        }
+
+        .brand-logo-txt {
+            font-size: 11px; font-weight: 900; letter-spacing: 1.2em; color: var(--accent);
+            text-transform: uppercase; margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(215,25,32,0.4);
+            display: flex; align-items: center; justify-content: center; gap: 20px;
+        }
+        .brand-logo-txt::before, .brand-logo-txt::after {
+            content: ''; width: 40px; height: 1px; background: rgba(215,25,32,0.3);
+        }
+
+        .model-title-large {
+            font-size: clamp(40px, 6vw, 90px); font-weight: 900; letter-spacing: -0.04em;
+            text-transform: uppercase; color: #fff; line-height: 0.9;
+        }
+
+        .viewer-actions {
+            position: absolute; bottom: 80px;
+            display: flex; flex-direction: column; align-items: center; gap: 35px;
+            z-index: 20;
+            animation: actionsReveal 2s cubic-bezier(0.19, 1, 0.22, 1) 0.5s both;
+        }
+        @keyframes actionsReveal {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* PREMIUM GLASS BUTTON */
+        .btn-discover {
+            background: var(--accent); color: #fff; border: 1px solid rgba(255,255,255,0.1);
+            padding: 22px 100px; font-size: 12px; font-weight: 900;
+            letter-spacing: 0.4em; text-transform: uppercase;
+            cursor: pointer; transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 20px 40px rgba(215,25,32,0.3), inset 0 0 20px rgba(255,255,255,0.1);
+            position: relative; overflow: hidden;
+        }
+        .btn-discover::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            transition: 0.8s;
+        }
+        .btn-discover:hover::before { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        .btn-discover:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(215,25,32,0.5);
+            letter-spacing: 0.6em;
+        }
+
+        .sub-actions { 
+            display: flex; gap: 60px; 
+            padding: 15px 40px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 100px;
+        }
+        .sub-btn {
+            background: none; border: none; color: rgba(255,255,255,0.6);
+            font-size: 11px; font-weight: 800; letter-spacing: 0.3em;
+            text-transform: uppercase; cursor: pointer;
+            transition: 0.4s; position: relative;
+        }
+        .sub-btn:hover { color: #fff; transform: translateY(-2px); }
+        .sub-btn::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px;
+            background: var(--accent); transition: 0.4s;
+        }
+        .sub-btn:hover::after { width: 100%; }
+
+        .back-circle {
+            position: absolute; top: 40px; right: 50px; z-index: 100;
+            display: flex; align-items: center; gap: 12px;
+            color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 800;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            text-decoration: none; transition: 0.4s;
+        }
+        .back-circle:hover { color: #fff; letter-spacing: 0.4em; }
+        .back-circle svg { width: 18px; height: 18px; stroke: rgba(255,255,255,0.6); transition: 0.3s; }
+        .back-circle:hover svg { stroke: #fff; transform: translateX(-5px); }
+
+        @keyframes charReveal {
+            0% { opacity: 0; transform: translateY(20px) scale(0.8); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        .animate-pop { animation: slidePop 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+
+        /* --- ENQUIRY MODAL --- */
+        .enquiry-modal {
+            position: fixed; inset: 0; z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.4s ease;
+        }
+        .enquiry-modal.active { opacity: 1; visibility: visible; }
+        .enquiry-bg {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+        }
+        .enquiry-content {
+            position: relative; width: 100%; max-width: 500px;
+            background: #0f0f0f; border: 1px solid rgba(255,255,255,0.1);
+            border-top: 2px solid var(--accent); border-radius: 12px;
+            padding: 40px; transform: translateY(20px); transition: 0.4s cubic-bezier(0.19,1,0.22,1);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+        .enquiry-modal.active .enquiry-content { transform: translateY(0); }
+        .enquiry-close {
+            position: absolute; top: 20px; right: 20px; background: none; border: none;
+            color: #888; font-size: 24px; cursor: pointer; transition: 0.3s;
+        }
+        .enquiry-close:hover { color: #fff; transform: scale(1.1); }
+        .enquiry-title { font-size: 24px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; color: #fff; letter-spacing: 0.1em; }
+        .enquiry-desc { font-size: 13px; color: #888; margin-bottom: 25px; line-height: 1.4; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); color: #fff;
+            padding: 12px 14px; border-radius: 6px; font-family: 'Outfit'; font-size: 14px; transition: 0.3s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent); background: #222; }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .form-input[readonly] { background: #111; color: #888; cursor: not-allowed; }
+        
+        .form-row { display: flex; gap: 16px; }
+        .form-row > * { flex: 1; }
+        
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 16px; margin-top: 10px; cursor: pointer; }
+        .checkbox-group input { margin-top: 3px; accent-color: var(--accent); }
+        .checkbox-label { font-size: 12px; color: #888; line-height: 1.4; }
+        
+        .btn-submit {
+            width: 100%; background: var(--accent); color: #fff; border: none; padding: 15px;
+            font-size: 13px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+            border-radius: 6px; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-submit:hover { background: #ff2028; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(215,25,32,0.3); }
+
+        .success-overlay {
+            position: absolute; inset: 0; background: #0f0f0f; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center; border-radius: 12px;
+            opacity: 0; pointer-events: none; transition: 0.4s ease; z-index: 10;
+        }
+        .success-overlay.active { opacity: 1; pointer-events: all; }
+        .success-icon { width: 60px; height: 60px; background: rgba(0, 255, 100, 0.1); color: #00ff64; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 20px; }
+        .success-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+        .success-desc { font-size: 14px; color: #888; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" style="display: block;">
+        <!-- MAIN VIEWER: Now Full Page -->
+        <section class="main-viewer" style="width: 100vw; height: 100vh; padding: 0;">
+            <a href="/discover" class="back-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                BACK TO SHOWCASE
+            </a>
+
+            <div class="viewer-header" style="z-index: 10; top: 100px;">
+                <p class="brand-logo-txt" id="brand-heading">FERRARI</p>
+                <h1 class="model-title-large" id="main-model-name">...</h1>
+            </div>
+
+            <div class="car-image-container" id="car-viewer" style="width: 100%; height: 100%; max-width: none; margin: 0;">
+                <img src="" alt="Car" id="main-car-img">
+                <div class="shadow-floor"></div>
+            </div>
+
+            <div class="viewer-actions" style="position: absolute; bottom: 80px; z-index: 9999; margin-top: 0;">
+                <a href="#" class="btn-discover" id="discover-btn" style="text-decoration: none; display: block;">Discover More</a>
+                <div class="sub-actions">
+                    <button class="sub-btn" id="btn-enquire">Enquire</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ENQUIRY MODAL -->
+    <div class="enquiry-modal" id="enquiryModal">
+        <div class="enquiry-bg" id="enquiryBg"></div>
+        <div class="enquiry-content">
+            <button class="enquiry-close" id="enquiryClose">&times;</button>
+            <h2 class="enquiry-title">Make an Enquiry</h2>
+            <p class="enquiry-desc">Register your interest. A SMK Car concierge will contact you shortly.</p>
+            
+            <form id="enquiryForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" id="eqName" required placeholder="John Doe">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Mobile Number *</label>
+                        <input type="tel" class="form-input" id="eqPhone" required placeholder="+1 234 567 890">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email ID (Optional)</label>
+                        <input type="email" class="form-input" id="eqEmail" placeholder="john@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">City / Location</label>
+                        <input type="text" class="form-input" id="eqCity" placeholder="Dubai, UAE">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Inquiry Type</label>
+                        <select class="form-select" id="eqType">
+                            <option value="Buy Car">Buy Car</option>
+                            <option value="Sell Car">Sell Car</option>
+                            <option value="Test Drive">Test Drive</option>
+                            <option value="Loan/EMI">Loan/EMI</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Car Model</label>
+                        <input type="text" class="form-input" id="eqModel" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Time</label>
+                        <select class="form-select" id="eqTime">
+                            <option value="Anytime">Anytime</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message / Requirement</label>
+                    <textarea class="form-textarea" id="eqMessage" placeholder="Any specific requirements?"></textarea>
+                </div>
+
+                <label class="checkbox-group">
+                    <input type="checkbox" id="eqWhatsapp" checked>
+                    <span class="checkbox-label">Contact me via WhatsApp on this number</span>
+                </label>
+                
+                <label class="checkbox-group">
+                    <input type="checkbox" id="eqTerms" required>
+                    <span class="checkbox-label">I agree to the Terms & Conditions and Privacy Policy *</span>
+                </label>
+
+                <button type="submit" class="btn-submit">Submit Enquiry</button>
+            </form>
+
+            <div class="success-overlay" id="enquirySuccess">
+                <div class="success-icon">&#10003;</div>
+                <h3 class="success-title">Enquiry Sent</h3>
+                <p class="success-desc">Thank you. Our luxury concierge will be in touch with you shortly to assist with your request.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="carsData.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const brandId = urlParams.get('id') || 'ferrari';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cars = window.db ? db.getCars() : [];
+            const brands = window.db ? db.getBrands() : [];
+            const brand = brands.find(b => b.id === brandId);
+
+            if (brand) {
+                document.getElementById('brand-heading').innerText = brand.name;
+            }
+
+            const brandCars = cars.filter(c => c.brand.toLowerCase() === brandId.toLowerCase());
+            const mainName = document.getElementById('main-model-name');
+            const mainImg = document.getElementById('main-car-img');
+            const discoverBtn = document.getElementById('discover-btn');
+
+            function openCarPage(id) {
+                if (id === 'f80') window.location.href = '/ferrari-f80';
+                else if (id === 'revuelto') window.location.href = '/revuelto';
+                else if (id === 'bolide') window.location.href = '/bugatti';
+                else if (id === '296-speciale') window.location.href = '/296-speciale';
+                else window.location.href = `/car?id=${id}`;
+            }
+
+            function selectCar(car) {
+                // Update Model Name with Advanced Reveal
+                mainName.innerHTML = car.name.split('').map((char, i) => 
+                    `<span style="display:inline-block; animation: charReveal 0.8s cubic-bezier(0.19,1,0.22,1) ${i * 0.03}s both">${char === ' ' ? '&nbsp;' : char}</span>`
+                ).join('');
+                
+                // 3D Model logic
+                const viewerContainer = document.getElementById('car-viewer');
+                if (car.modelUrl) {
+                    viewerContainer.innerHTML = `
+                        <model-viewer 
+                            id="active-model"
+                            src="${car.modelUrl}" 
+                            camera-controls 
+                            auto-rotate 
+                            shadow-intensity="2"
+                            exposure="${car.brand === 'lamborghini' ? '1.5' : (car.brand === 'ferrari' ? '2.5' : '2.0')}" 
+                            environment-image="neutral"
+                            camera-orbit="45deg 75deg auto" 
+                            interaction-prompt="none"
+                            style="width: 100%; height: 100%;"
+                            ar
+                        ></model-viewer>
+                        <div class="shadow-floor" style="bottom: 5%;"></div>
+                    `;
+
+                    // ADVANCED PBR TUNING FOR SHINE
+                    const modelViewer = document.getElementById('active-model');
+                    modelViewer.addEventListener('load', () => {
+                        const materials = modelViewer.model.materials;
+                        materials.forEach(mat => {
+                            const matName = mat.name.toLowerCase();
+                            // Apply High Gloss for Ferrari/Rimac, but leave Lambo material intrinsic maps intact
+                            if (car.brand === 'ferrari' || car.brand === 'rimac') {
+                                if (matName.includes('body') || matName.includes('paint') || matName.includes('car') || matName.includes('shell')) {
+                                    mat.pbrMetallicRoughness.setMetallicFactor(0.8);
+                                    mat.pbrMetallicRoughness.setRoughnessFactor(0.15);
+                                    
+                                    // Custom Color override for Rimac - Light Blue
+                                    if (car.brand === 'rimac') {
+                                        mat.pbrMetallicRoughness.setBaseColorFactor([0.15, 0.65, 0.95, 1.0]); 
+                                    }
+                                }
+
+                                // Smart Color Targeting for untextured models
+                                if (car.brand === 'ferrari') {
+                                    if (matName.includes('tire') || matName.includes('tyre') || matName.includes('rubber') || matName.includes('black')) {
+                                        mat.pbrMetallicRoughness.setBaseColorFactor([0.05, 0.05, 0.05, 1.0]);
+                                        mat.pbrMetallicRoughness.setRoughnessFactor(0.9);
+                                        mat.pbrMetallicRoughness.setMetallicFactor(0.1);
+                                    } else if (matName.includes('glass') || matName.includes('window')) {
+                                        mat.pbrMetallicRoughness.setBaseColorFactor([0.1, 0.1, 0.1, 0.7]);
+                                        mat.pbrMetallicRoughness.setRoughnessFactor(0.0);
+                                    } else if (matName.includes('rim') || matName.includes('alloy') || matName.includes('metal')) {
+                                        mat.pbrMetallicRoughness.setBaseColorFactor([0.7, 0.7, 0.7, 1.0]);
+                                        mat.pbrMetallicRoughness.setRoughnessFactor(0.3);
+                                        mat.pbrMetallicRoughness.setMetallicFactor(0.9);
+                                    } else {
+                                        // Color ANYTHING else RED to ensure the car body is painted!
+                                        mat.pbrMetallicRoughness.setBaseColorFactor([0.8, 0.05, 0.05, 1.0]); 
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                } else {
+                    viewerContainer.innerHTML = `
+                        <img src="${car.image}" alt="${car.name}" id="main-car-img" class="animate-pop" style="max-height: 80%; width: auto;">
+                        <div class="shadow-floor"></div>
+                    `;
+                }
+                
+                // Directly set href for reliability
+                if (car.id === 'f80') discoverBtn.href = "ferrari-f80.html";
+                else if (car.id === 'revuelto') discoverBtn.href = "revuelto.html";
+                else if (car.id === 'bolide') discoverBtn.href = "bugatti.html";
+                else if (car.id === '296-speciale') discoverBtn.href = "296-speciale.html";
+                else discoverBtn.href = `/car?id=${car.id}`;
+            }
+
+            function populateList(category = 'All') {
+                const listContainer = document.getElementById('model-list-container');
+                let filtered = brandCars;
+                
+                if (category !== 'All') {
+                    filtered = brandCars.filter(c => c.category === category);
+                }
+                let currentCarIndex = 0;
+                let cycleInterval;
+
+                function resetAutoCycle(len) {
+                    clearInterval(cycleInterval);
+                    if (len <= 1) return;
+                    cycleInterval = setInterval(() => {
+                        currentCarIndex = (currentCarIndex + 1) % len;
+                        const items = document.querySelectorAll('.model-item');
+                        if (items.length > 0 && items[currentCarIndex]) {
+                            items.forEach(i => i.classList.remove('active'));
+                            items[currentCarIndex].classList.add('active');
+                            selectCar(filtered[currentCarIndex]);
+                        }
+                    }, 5500);
+                }
+
+                if (filtered.length > 0) {
+                    if (listContainer) {
+                        listContainer.innerHTML = '';
+                        filtered.forEach((car, index) => {
+                            const item = document.createElement('div');
+                            item.className = 'model-item';
+                            if (index === 0) item.classList.add('active');
+                            item.dataset.id = car.id;
+                            item.innerHTML = `<span class="model-item-name">${car.name}</span>`;
+                            item.addEventListener('click', () => {
+                                currentCarIndex = index;
+                                document.querySelectorAll('.model-item').forEach(i => i.classList.remove('active'));
+                                item.classList.add('active');
+                                selectCar(car);
+                                resetAutoCycle(filtered.length);
+                            });
+                            listContainer.appendChild(item);
+                        });
+                        document.getElementById('category-name').innerText = category === 'All' ? 'Range' : category;
+                    }
+                    // Always select the first car initially
+                    selectCar(filtered[0]);
+                    resetAutoCycle(filtered.length);
+                } else if (listContainer) {
+                    listContainer.innerHTML = '<p style="padding: 20px 40px; color: #444; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;">No models available in this category</p>';
+                    clearInterval(cycleInterval);
+                }
+            }
+
+            // Sidebar navigation
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                    nav.classList.add('active');
+                    const cat = nav.dataset.category || 'All';
+                    populateList(cat);
+                });
+            });
+
+            // --- ENQUIRY MODAL LOGIC ---
+            const btnEnquire = document.getElementById('btn-enquire');
+            const eqModal = document.getElementById('enquiryModal');
+            const eqBg = document.getElementById('enquiryBg');
+            const eqClose = document.getElementById('enquiryClose');
+            const eqForm = document.getElementById('enquiryForm');
+            const eqSuccess = document.getElementById('enquirySuccess');
+            const eqModelInput = document.getElementById('eqModel');
+
+            const openEnquiry = () => {
+                const activeModelRaw = document.getElementById('main-model-name').innerText.trim() || 'Unknown Model';
+                eqModelInput.value = activeModelRaw.replace(/\s+/g, ' ').replace(/&nbsp;/g, ' ').trim();
+                eqModal.classList.add('active');
+            };
+
+            const closeEnquiry = () => {
+                eqModal.classList.remove('active');
+                setTimeout(() => {
+                    if (eqSuccess) eqSuccess.classList.remove('active');
+                    if (eqForm) eqForm.reset();
+                }, 400);
+            };
+
+            if(btnEnquire) btnEnquire.addEventListener('click', openEnquiry);
+            if(eqBg) eqBg.addEventListener('click', closeEnquiry);
+            if(eqClose) eqClose.addEventListener('click', closeEnquiry);
+
+            if(eqForm) {
+                eqForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Validation passes due to HTML5 attributes
+                    eqSuccess.classList.add('active');
+                    setTimeout(() => {
+                        closeEnquiry();
+                    }, 3500);
+                });
+            }
+
+            // Initial populate
+            populateList('All');
+
+            // If no cars found at all for the brand
+            if (brandCars.length === 0) {
+                mainName.innerText = (brandId === 'porsche' ? "GT3 RS" : (brandId === 'koenigsegg' ? "SMK CAR MODS" : "NO MODELS FOUND"));
+                
+                if (brandId === 'porsche') {
+                    const viewerContainer = document.getElementById('car-viewer');
+                    viewerContainer.innerHTML = `
+                        <model-viewer 
+                            id="active-model"
+                            src="porsche-911-gt3-rs (2).glb" 
+                            camera-controls 
+                            auto-rotate 
+                            shadow-intensity="2"
+                            exposure="2.0" 
+                            environment-image="neutral"
+                            camera-orbit="45deg 80deg 70%" 
+                            interaction-prompt="none"
+                            style="width: 100%; height: 100%;"
+                            ar
+                        ></model-viewer>
+                        <div class="shadow-floor" style="bottom: 5%;"></div>
+                    `;
+                    // PBR tuning for Porsche
+                    const modelViewer = document.getElementById('active-model');
+                    modelViewer.addEventListener('load', () => {
+                        const materials = modelViewer.model.materials;
+                        materials.forEach(mat => {
+                            if (mat.name.toLowerCase().includes('body') || mat.name.toLowerCase().includes('paint') || mat.name.toLowerCase().includes('car')) {
+                                mat.pbrMetallicRoughness.setMetallicFactor(1.0);
+                                mat.pbrMetallicRoughness.setRoughnessFactor(0.04);
+                            }
+                        });
+                    });
+                } else {
+                    mainImg.style.display = "none";
+                }
+            }
+        });
+    </script>
+    <script src="cinematic.js"></script>
+</body>
+</html>

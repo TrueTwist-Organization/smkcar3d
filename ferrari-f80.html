@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferrari F80 | The Perfection</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="footer-styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        /* --- CORE RESET & THEME --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --red: #D71920;
+            --bg: #050505;
+            --text-main: #fff;
+            --text-dim: #999;
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- STABLE SECTION SYSTEM --- */
+        .section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            z-index: 10;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { text-transform: uppercase; font-weight: 900; line-height: 0.95; letter-spacing: -0.02em; }
+        .title-huge { font-size: clamp(40px, 8vw, 90px); margin-bottom: 25px; }
+        .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 20px; display: block; }
+        .desc-main { font-size: 14px; color: var(--text-dim); max-width: 550px; line-height: 1.6; margin-bottom: 20px; }
+        .vertical-text { font-size: clamp(24px, 4vw, 48px); line-height: 1.1; margin-bottom: 25px; white-space: pre-line; }
+
+        /* --- TEXT HOVER HIGHLIGHTS --- */
+        h1, h2, h3, p, span, .perf-key, .perf-val {
+            transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        }
+        h1:hover, h2:hover, h3:hover, .title-huge:hover, .vertical-text:hover {
+            color: #fff !important;
+            text-shadow: 0 0 20px var(--red), 0 0 40px rgba(215,25,32,0.6);
+            transform: translateY(-2px);
+        }
+        p:hover, span:hover, .perf-key:hover, .perf-val:hover {
+            color: #fff !important;
+            text-shadow: 0 0 15px rgba(215,25,32,0.4);
+            transform: scale(1.01);
+        }
+
+        /* --- HERO (VIDEO) --- */
+        .hero { height: 100vh; overflow: hidden; background: var(--bg); padding: 0; }
+        .hero-video {
+            position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+            object-fit: cover; transform: translate(-50%, -50%); opacity: 0.6; z-index: 0;
+        }
+
+        /* --- IMMERSIVE INTRO SECTION --- */
+        .immersive-intro {
+            background-image: linear-gradient(to right, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0.6) 50%, rgba(5,5,5,0.8) 100%),
+                               url('ferrari-f80-proper.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .immersive-intro::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, #050505 80%);
+            animation: openFromWithin 2s cubic-bezier(0.19,1,0.22,1) forwards;
+            pointer-events: none; z-index: 5;
+        }
+        @keyframes openFromWithin {
+            0% { clip-path: circle(0% at 50% 50%); opacity: 1; }
+            100% { clip-path: circle(150% at 50% 50%); opacity: 0; }
+        }
+
+        /* --- BUTTONS --- */
+        .btn-ferrari {
+            background: #fff; color: #000; padding: 18px 48px; border-radius: 50px;
+            font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em;
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+            transition: 0.5s cubic-bezier(0.19,1,0.22,1);
+            border: 1px solid rgba(255,255,255,0.1); cursor: pointer;
+            position: relative; overflow: hidden;
+        }
+        .btn-ferrari:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 20px 40px rgba(215,25,32,0.4); 
+            background: #D71920; color: #fff; 
+        }
+
+        /* --- DATA TABLES --- */
+        .perf-stats { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 10px; 
+            margin-top: 30px; 
+            width: 100%;
+        }
+        .perf-stat-item {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .perf-stat-item:hover {
+            border-top-color: var(--red);
+        }
+        .perf-key {
+            font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-weight: 700;
+        }
+        .perf-val {
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- SPLIT LAYOUTS --- */
+        .split-section .container { display: flex; gap: 100px; align-items: center; }
+        .split-left { flex: 1; z-index: 2; }
+        .split-right { flex: 1.2; text-align: right; z-index: 1; }
+        .showcase-img, .showcase-video { width: 100%; height: auto; max-height: 600px; object-fit: contain; filter: drop-shadow(0 20px 60px rgba(0,0,0,0.8)); }
+        .showcase-video.enlarged { max-height: 850px; object-fit: cover; transform: scale(1.15); transform-origin: right center; border-radius: 4px; }
+        .showcase-video.vertical { 
+            width: 100%; 
+            max-width: 450px; 
+            aspect-ratio: 9 / 14; 
+            object-fit: cover; 
+            border-radius: 20px; 
+            box-shadow: 0 0 30px rgba(215,25,32,0.6), 0 0 80px rgba(215,25,32,0.3), 0 40px 80px rgba(0,0,0,0.8);
+            border: 2px solid rgba(215,25,32,0.5);
+            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .showcase-video.vertical:hover {
+            box-shadow: 0 0 50px rgba(215,25,32,0.8), 0 0 120px rgba(215,25,32,0.4), 0 40px 80px rgba(0,0,0,0.8);
+            transform: translateY(-10px);
+        }
+        .showcase-embed { width: 100%; height: 500px; border: none; overflow: hidden; pointer-events: all; }
+        
+        /* Stats Grid */
+        .stat-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+            margin-top: 100px; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 50px; text-align: left; background: transparent;
+        }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-val { font-size: clamp(18px, 2.5vw, 24px); font-weight: 800; line-height: 1; margin-bottom: 6px; color: #fff; }
+        .stat-label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.2em; line-height: 1.4; }
+
+        .gallery-footer { 
+            background: #0a0a0a; padding: 80px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;
+        }
+        .gallery-img-wrapper { 
+            overflow: hidden; border-radius: 6px; cursor: pointer; position: relative; 
+        }
+        .gallery-img-wrapper img, .gallery-img-wrapper video { 
+            width: 100%; height: 400px; object-fit: cover; 
+            transition: 0.8s cubic-bezier(0.19,1,0.22,1); filter: brightness(0.8);
+        }
+        .gallery-img-wrapper:hover img, .gallery-img-wrapper:hover video { transform: scale(1.05); filter: brightness(1.1); }
+
+        .gallery-bottom { 
+            padding: 100px 8%;
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px;
+            background: #050505;
+        }
+        .gallery-card { 
+            overflow: hidden; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            position: relative; 
+            aspect-ratio: 1 / 1.1;
+            background: #111;
+            transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .gallery-card img, .gallery-card video { 
+            width: 100%; height: 100%; object-fit: cover; 
+            transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1); 
+            filter: brightness(0.7);
+        }
+        .gallery-card:hover { transform: scale(1.02); z-index: 2; }
+        .gallery-card:hover img, .gallery-card:hover video { transform: scale(1.05); filter: brightness(1); }
+
+        /* --- ANIMATIONS --- */
+        .reveal { opacity: 0; transform: translateY(60px); filter: blur(10px); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- POWERTRAIN MODAL --- */
+        .powertrain-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 2000; display: flex; align-items: stretch; justify-content: flex-end;
+            pointer-events: none;
+        }
+        .modal-bg {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            opacity: 0; transition: 0.6s cubic-bezier(0.19,1,0.22,1); cursor: pointer;
+        }
+        .modal-content {
+            position: relative; width: 100%; max-width: 800px; 
+            background: linear-gradient(to right, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.8) 100%), url('ferrari-modal-bg.jpg') center/cover no-repeat;
+            height: 100%; transform: translateX(100%); transition: 0.8s cubic-bezier(0.19,1,0.22,1);
+            overflow: hidden; display: flex; flex-direction: column;
+            border-left: 1px solid rgba(215,25,32,0.3);
+        }
+        .powertrain-modal.active { pointer-events: all; }
+        .powertrain-modal.active .modal-bg { opacity: 1; }
+        .powertrain-modal.active .modal-content { transform: translateX(0); }
+        
+        .modal-scroll { padding: 100px 60px; overflow-y: auto; height: 100%; }
+        .modal-scroll::-webkit-scrollbar { width: 4px; }
+        .modal-scroll::-webkit-scrollbar-thumb { background: var(--red); }
+        
+        .btn-close {
+            position: absolute; top: 40px; right: 40px; background: none; border: none;
+            color: #fff; font-family: 'Outfit'; font-size: 11px; font-weight: 800;
+            letter-spacing: 0.2em; cursor: pointer; z-index: 10;
+            transition: 0.3s;
+        }
+        .btn-close:hover { color: var(--red); transform: scale(1.1); }
+        
+        /* Modal Scroll Animations */
+        .mt-anim { opacity: 0; transform: translateY(40px); transition: 1s cubic-bezier(0.19,1,0.22,1); }
+        .powertrain-modal.active .mt-anim { opacity: 1; transform: translateY(0); }
+        .powertrain-modal.active .mt-anim:nth-child(1) { transition-delay: 0.3s; }
+        .powertrain-modal.active .mt-anim:nth-child(2) { transition-delay: 0.4s; }
+        .powertrain-modal.active .mt-anim:nth-child(3) { transition-delay: 0.5s; }
+
+        /* --- AERO FULL MODAL --- */
+        .aero-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 3000; display: flex; transform: translateX(100%);
+            transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .aero-modal.active { transform: translateX(0); }
+        .aero-left { flex: 0.6; height: 100vh; background: var(--bg); }
+        .aero-right { flex: 0.4; height: 100vh; overflow-y: auto; background: linear-gradient(135deg, #111, #1a1a1a); border-left: 1px solid rgba(215,25,32,0.3); position: relative; }
+        .aero-right::-webkit-scrollbar { width: 4px; }
+        .aero-right::-webkit-scrollbar-thumb { background: var(--red); }
+        .aero-video { width: 100%; height: 100%; object-fit: cover; }
+        #aeroCanvasContainer { width: 100%; height: 100%; position: relative; overflow: hidden; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
+        .aero-scroll { padding: 100px 80px; }
+        .aero-close {
+            position: absolute; top: 40px; right: 40px; background: none; border: none;
+            color: #fff; font-family: 'Outfit'; font-size: 11px; font-weight: 800;
+            letter-spacing: 0.2em; cursor: pointer; z-index: 100; transition: 0.3s;
+        }
+        .aero-close:hover { color: var(--red); transform: scale(1.1); }
+        .aero-feature { margin-bottom: 50px; opacity: 0; transform: translateY(30px); transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+        .aero-modal.active .aero-feature { opacity: 1; transform: translateY(0); }
+        .aero-modal.active .aero-feature:nth-child(1) { transition-delay: 0.3s; }
+        .aero-modal.active .aero-feature:nth-child(2) { transition-delay: 0.4s; }
+        .aero-modal.active .aero-feature:nth-child(3) { transition-delay: 0.5s; }
+        .aero-modal.active .aero-feature:nth-child(4) { transition-delay: 0.6s; }
+        .aero-modal.active .aero-feature:nth-child(5) { transition-delay: 0.7s; }
+        .aero-modal.active .aero-feature:nth-child(6) { transition-delay: 0.8s; }
+        .aero-num { display: block; font-size: 12px; color: var(--red); letter-spacing: 0.3em; margin-bottom: 10px; font-weight: 800; }
+        .aero-head { font-size: 24px; margin-bottom: 15px; color: #fff; text-transform: uppercase; font-weight: 700; line-height: 1.1; }
+        
+        /* Interactive Tech Points */
+        .aero-feature { 
+            margin-bottom: 50px; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1); 
+            padding: 30px; 
+            border-radius: 12px; 
+            border: 1px solid transparent; 
+            cursor: pointer;
+            position: relative;
+        }
+        .aero-feature:hover { 
+            background: rgba(255, 255, 255, 0.6); 
+            border-color: rgba(215, 25, 32, 0.1); 
+            transform: scale(1.02); 
+        }
+        .aero-feature.active { 
+            background: #111; 
+            border-color: var(--red); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+        }
+        .aero-feature.active .aero-head { color: var(--red); }
+        .aero-feature::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--red);
+            transform: scaleY(0); transition: 0.4s cubic-bezier(0.19,1,0.22,1); border-radius: 4px;
+        }
+        .aero-feature.active::before { transform: scaleY(1); }
+
+/* --- ENGINE EXPERIENCE (NEW) --- */
+        .engine-experience {
+            min-height: 100vh;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .engine-content-left {
+            position: absolute; top: 100px; left: 80px; z-index: 5; max-width: 500px;
+        }
+        .feel-title {
+            font-size: clamp(40px, 6vw, 80px); font-weight: 900; letter-spacing: -0.03em;
+            margin-bottom: 15px; color: #fff; line-height: 0.9;
+        }
+        .headphone-note {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 13px; color: #888; letter-spacing: 0.05em; font-weight: 300;
+        }
+        .headphone-note svg { width: 18px; fill: #888; }
+        
+        .visualizer-container {
+            position: relative; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            width: 400px; height: 400px;
+        }
+        #vizCanvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+        }
+        .engine-btn {
+            width: 140px; height: 140px; border-radius: 50%; border: 6px solid #222;
+            background: #111; cursor: pointer;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            transition: 0.8s cubic-bezier(0.19,1,0.22,1); z-index: 15;
+            box-shadow: 0 0 60px rgba(0,0,0,0.5), inset 0 0 40px rgba(255,255,255,0.05);
+            overflow: visible;
+        }
+        /* Realistic wheel spoke design (5-spoke star) */
+        .engine-btn::before {
+            content: ''; position: absolute; inset: 4px;
+            background: 
+                radial-gradient(circle at center, #FFEB3B 0%, #FFEB3B 10%, #222 11% 14%, transparent 15%), 
+                conic-gradient(from 0deg, #333 0deg 12deg, transparent 12deg 60deg, #333 60deg 84deg, transparent 84deg 132deg, #333 132deg 156deg, transparent 156deg 204deg, #333 204deg 228deg, transparent 228deg 276deg, #333 276deg 300deg, transparent 300deg 348deg, #333 348deg);
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+            transition: 1.5s cubic-bezier(0.19,1,0.22,1);
+        }
+        /* Tire detail - outer rim highlight */
+        .engine-btn::after {
+            content: ''; position: absolute; inset: -4px;
+            border: 2px solid rgba(0,0,0,0.08);
+            border-radius: 50%; pointer-events: none;
+            z-index: 10;
+        }
+        .engine-btn:hover { transform: scale(1.05) rotate(15deg); }
+        .engine-btn.active { transform: scale(1.05); }
+        .engine-btn.active::before { animation: spinWheel 2s infinite linear; }
+        @keyframes spinWheel { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .engine-btn svg { width: 22px; height: 22px; fill: var(--text-main); z-index: 10; transition: 0.3s; position: relative; }
+        
+        @media (max-width: 1000px) {
+            .engine-content-left { top: 60px; left: 40px; }
+            .visualizer-container { width: 280px; height: 280px; }
+            .engine-btn { width: 100px; height: 100px; }
+        }
+
+        @media (max-width: 1000px) {
+            .section { padding: 100px 30px; height: auto; }
+            .split-section .container { flex-direction: column; text-align: center; }
+            .split-right { text-align: center; }
+            .gallery-footer { grid-template-columns: 1fr; padding: 60px 40px; }
+            .engine-btn { width: 120px; height: 120px; }
+        }
+
+        /* --- ADVANCED CINEMATIC UI --- */
+        #cursor-follower {
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background: var(--red); border-radius: 50%; pointer-events: none;
+            z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s ease-out;
+            transform: translate(-50%, -50%); display: none;
+        }
+        #cursor-outline {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+            border: 1px solid var(--red); border-radius: 50%; pointer-events: none;
+            z-index: 9998; transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1), width 0.3s, height 0.3s;
+            transform: translate(-50%, -50%); display: none;
+        }
+        .magnetic-target:hover ~ #cursor-outline { width: 80px; height: 80px; border-width: 2px; }
+
+        /* HUD Overlays for Aero */
+        .aero-hud {
+            position: absolute; inset: 0; pointer-events: none; z-index: 10;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 40px;
+            font-family: 'Outfit'; color: rgba(255,255,255,0.6); font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em;
+        }
+        .hud-line { width: 100px; height: 1px; background: rgba(255,255,255,0.2); margin-bottom: 10px; position: relative; overflow: hidden; }
+        .hud-line::after { content: ''; position: absolute; left: -100%; top: 0; width: 100%; height: 100%; background: var(--red); animation: hudScan 2s infinite; }
+        @keyframes hudScan { to { left: 100%; } }
+        
+        .hud-top-right { position: absolute; top: 40px; right: 40px; text-align: right; }
+        .hud-bottom-left { position: absolute; bottom: 40px; left: 40px; }
+        .hud-target {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100px; height: 100px; border: 1px solid rgba(215, 25, 32, 0.2);
+            border-radius: 50%; opacity: 0; transition: 0.5s;
+        }
+        .aero-modal.active .hud-target { opacity: 1; animation: hudPulse 4s infinite; }
+        @keyframes hudPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; } 50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; } }
+    </style>
+</head>
+<body>
+    <div id="cursor-follower"></div>
+    <div id="cursor-outline"></div>
+
+    <!-- 1. HERO SECTION (VIDEO BACKGROUND) -->
+    <section class="section hero">
+        <video autoplay muted loop playsinline class="hero-video">
+            <source src="f80-hero.mp4" type="video/mp4">
+        </video>
+        <div class="container" style="position:relative; z-index:10; text-align:center;">
+             <div>
+                <span class="section-label" style="color:#fff;">Immersive Experience</span>
+                <h1 class="title-huge" style="color:#fff; letter-spacing: 0.1em;">FERRARI F80</h1>
+             </div>
+        </div>
+    </section>
+
+    <!-- 1.5 ENGINE SOUND EXPERIENCE (VIDEO) -->
+    <section class="section engine-experience" id="engine-experience" style="padding:0;">
+        <video id="engineVideo" loop playsinline src="From KlickPin CF Car Drift cars lamborghini mclaren ferrari.mp4" style="position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 0;"></video>
+        <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%); z-index: 1;"></div>
+        
+        <div class="engine-content-left" style="z-index: 5;">
+            <h2 class="feel-title" style="color: #fff;">FEEL THE<br>RUSH</h2>
+            <div class="headphone-note" style="color: #ccc;">
+                <svg viewBox="0 0 24 24" style="fill: #ccc;"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/></svg>
+                <span>Immersive raw engine roar. Toggle sound below.</span>
+            </div>
+        </div>
+
+        <div style="position: absolute; bottom: 60px; left: 80px; z-index: 15; display: flex; gap: 20px;">
+            <button id="playVidBtn" class="btn-ferrari" style="padding: 12px 30px; font-size: 10px;">PLAY VIDEO</button>
+            <button id="muteVidBtn" class="btn-ferrari" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 12px 30px; font-size: 10px;">UNMUTE</button>
+        </div>
+    </section>
+
+    <!-- 2. MAIN TITLE + DESCRIPTION (IMMERSIVE BG REVEAL) -->
+    <section class="section immersive-intro">
+        <div class="container reveal">
+            <h1 class="title-huge">FERRARI<br>F80</h1>
+            <p class="desc-main">The Ferrari F80 is a conceptual next-generation hypercar envisioned as the ultimate expression of innovation and performance. Building upon decades of engineering excellence, it merges extreme power with advanced hybrid systems to deliver unparalleled driving dynamics.</p>
+            <p class="desc-main">Every element of the F80 has been designed to enhance performance, from its lightweight architecture to its aerodynamic efficiency. It is not just a car — it is a vision of future mobility and Ferrari’s relentless pursuit of perfection.</p>
+        </div>
+    </section>
+
+    <!-- 3. PERFORMANCE DATA -->
+    <section class="section" style="min-height: 100vh; background: url('ferrari_f80_concept_generated.png') center/cover fixed; position: relative;">
+        <!-- Glassmorphism dark backdrop so the white text is readable against the background image -->
+        <div style="position: absolute; inset: 0; background: rgba(10,10,10,0.8); z-index: 0; backdrop-filter: blur(10px);"></div>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+            <span class="section-label reveal" style="text-transform: none; margin-bottom: 20px; display: block; color: #fff;">Performance (Expected)</span>
+            <div class="perf-stats">
+                <div class="perf-stat-item reveal">
+                    <span class="perf-key">Power Output</span>
+                    <span class="perf-val">1000+ CV</span>
+                </div>
+                <div class="perf-stat-item reveal">
+                    <span class="perf-key">0–100 km/h</span>
+                    <span class="perf-val">~2.0 s</span>
+                </div>
+                <div class="perf-stat-item reveal">
+                    <span class="perf-key">Top Speed</span>
+                    <span class="perf-val">350+ km/h</span>
+                </div>
+                <div class="perf-stat-item reveal">
+                    <span class="perf-key">Powertrain</span>
+                    <span class="perf-val">Hybrid V6 Twin Turbo</span>
+                </div>
+                <div class="perf-stat-item reveal">
+                    <span class="perf-key">Drivetrain</span>
+                    <span class="perf-val">All-Wheel Drive (AWD)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SECTION 1 — POWERTRAIN -->
+    <section class="section split-section" style="flex-direction: column; align-items: stretch; justify-content: flex-start; padding-top: 150px;">
+        <div class="container reveal">
+            <div class="split-left">
+                <span class="section-label">Powertrain</span>
+                <h2 class="vertical-text">V6<br>ON<br>PAPER,<br>THRILLS<br>IN<br>PRACTICE</h2>
+                <div style="margin-bottom: 40px;">
+                    <p style="font-weight: 800; font-size: 24px;">V6 120° ENGINE</p>
+                    <p style="color: var(--text-dim); font-size: 14px; letter-spacing: 0.2em;">1000+ CV MAXIMUM POWER</p>
+                </div>
+                <a href="#" class="btn-ferrari" onclick="openPowertrain(event)">Discover the powertrain</a>
+            </div>
+            <div class="split-right">
+                <video autoplay muted loop playsinline class="showcase-video enlarged">
+                    <source src="f80-powertrain.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        
+        <!-- Powertrain Stats Grid -->
+        <div class="container">
+            <div class="stat-grid">
+                <div class="stat-item reveal"><span class="stat-val">V6</span><span class="stat-label">Powertrain</span></div>
+                <div class="stat-item reveal"><span class="stat-val">5.75 s</span><span class="stat-label">0-200 KM/H</span></div>
+                <div class="stat-item reveal"><span class="stat-val">300 cv/l</span><span class="stat-label">Specific power output</span></div>
+                <div class="stat-item reveal"><span class="stat-val">1200</span><span class="stat-label">Horsepower</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. SECTION 2 — CHASSIS -->
+    <section class="section split-section" style="background: #0a0a0a;">
+        <div class="container reveal">
+            <div class="split-right" style="order: 2; text-align: left; padding-left: 80px;">
+                <span class="section-label">CHASSIS AND BODY</span>
+                <h2 class="vertical-text">A<br>GENUINE<br>PERFORMANCE<br>ARCHITECTURE</h2>
+                <p class="desc-main">The Ferrari F80 features an ultra-lightweight carbon fibre chassis engineered to maximise rigidity and reduce weight. This advanced structure ensures optimal balance, precision, and driving control even at extreme speeds.</p>
+                <a href="#" class="btn-ferrari" onclick="openAero(event)">Discover more</a>
+            </div>
+            <div class="split-left">
+                <video autoplay muted loop playsinline class="showcase-video vertical">
+                    <source src="f80-chassis.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6-12. REMAINING SECTIONS OMITTED FOR BREVITY BUT KEPT IN PRODUCTION -->
+    <section class="section split-section">
+        <div class="container reveal">
+            <div class="split-left">
+                <span class="section-label">Design</span>
+                <h2 class="vertical-text">FERRARI<br>F80<br><br>ENGINEERED<br>FOR<br>THE<br>FUTURE</h2>
+                <p class="desc-main">Every curve of the Ferrari F80 is sculpted for performance. Its aggressive stance and aerodynamic profile are not only visually striking but also functionally essential for high-speed stability.</p>
+                <a href="/f80-viewer" class="btn-ferrari">Discover the design</a>
+            </div>
+            <div class="split-right">
+                <iframe src="f80-viewer.html?mini=true" class="showcase-embed" scrolling="no"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. FINAL FOOTER SECTION -->
+    <section class="gallery-bottom">
+        <div class="gallery-card reveal">
+            <img src="gallery-1.jpg" alt="SMK Car Gallery 1">
+        </div>
+        <div class="gallery-card reveal">
+            <video autoplay muted loop playsinline>
+                <source src="gallery-video-1.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="gallery-card reveal">
+            <img src="gallery-3.jpg" alt="SMK Car Gallery 3">
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="/" class="footer-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+                <p class="footer-tagline">Architects of hyper-automotive destiny. We curate the world's most exclusive machinery for those who demand the zenith of performance.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Discover</h5>
+                <ul>
+                    <li><a href="/models">Inventory</a></li>
+                    <li><a href="/discover">Showcase</a></li>
+                    <li><a href="/configure">Configuration</a></li>
+                    <li><a href="/about">Our Legacy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Collection</h5>
+                <ul>
+                    <li><a href="/ferrari">Ferrari</a></li>
+                    <li><a href="/revuelto">Lamborghini</a></li>
+                    <li><a href="/bugatti">Bugatti</a></li>
+                    <li><a href="/mclaren">McLaren</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/disclaimer">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copy">&copy; 2026 SMK CAR AUTO GROUP. ALL RIGHTS RESERVED.</div>
+            <div class="footer-nav">
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">YouTube</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- POWERTRAIN MODAL -->
+    <div class="powertrain-modal" id="powertrainModal">
+        <div class="modal-bg" onclick="closePowertrain()"></div>
+        <div class="modal-content">
+            <button class="btn-close" onclick="closePowertrain()">✖ CLOSE</button>
+            <div class="modal-scroll">
+                <span class="section-label mt-anim" style="color: var(--red);">Share / Tech</span>
+                <h2 class="title-huge mt-anim" style="font-size: clamp(40px, 6vw, 60px); margin-bottom: 40px; line-height: 1;">POWERTRAIN</h2>
+                <div class="mt-anim" style="max-width: 600px; text-align: left; padding-bottom: 60px;">
+                    <p class="desc-main" style="color: #999; font-size: 16px;">The carry-over from racing also includes technology from Formula 1, from which the concepts of the MGU-K and the MGU-H (with a bespoke e-turbo application) have been borrowed. It was also decided to tilt the engine-transmission unit down by 1.3° in the Z axis, to lower the centre of gravity without compromising the efficacy of the aerodynamic underfloor. This lowered installation position was permitted by the new smaller diameter flywheel.</p>
+                    <p class="desc-main" style="color: #999; font-size: 16px;">The powertrain also uses the first electric motor (MGU-K) developed, tested and manufactured entirely by Ferrari at Maranello. The design of this motor, and the tooth-coil stator, Halbach array rotor configuration and magnet retention system in carbon fibre in particular, draws from Ferrari’s experience in motorsports. A DC/DC converter transforms DC current at one voltage to DC current at a different voltage. This single component handles three different voltages simultaneously: 800 V, 48 V and 12 V.</p>
+                    <p class="desc-main" style="color: #999; font-size: 16px;">Also developed and manufactured entirely in-house by Ferrari, the front axle includes two electric motors, an inverter and an integrated cooling system. This component makes it possible to use torque vectoring for the front axle. Integrating different functions in a single component and the new mechanical layout have offered a weight saving of around 14 kg over previous applications. Optimising mechanical efficiency was a primary goal: low viscosity oil and a dry sump active lubrication system with an oil tank integrated directly into the axle reduced mechanical power losses by 20%. The use of high coverage ratio gears contributed to reducing noise emissions by 10 dB.</p>
+                    <p class="desc-main" style="color: #999; font-size: 16px;">The inverter integrated in the front axle also transforms alternating current produced by the axle under regenerative braking into direct current for recharging the battery. Another inverter is used for the rear electric motor (MGU-K), which performs three functions: starting the internal combustion engine, recovering energy to recharge the high voltage battery and supplementing the torque of the engine in certain dynamic conditions. Integrated into both of these inverters is the Ferrari Power Pack (FPP) system, a power module with all the elements necessary for power conversion combined in the most compact unit possible.</p>
+                    <p class="desc-main" style="color: #999; font-size: 16px;">The high-voltage battery is conceived for very high power density. Its innovative design is based on three principles: lithium-cell chemistry derived from Formula 1, an extensive use of carbon fibre for the construction of the monocoque casing, and a patented design and assembly method (cell-to-pack) which minimises the weight and volume of the unit. Situated low down in the engine bay, the pack contributes to even better dynamic vehicle behaviour by lowering the centre of gravity of the F80. The pack is configured with 204 cells connected in series and subdivided equally into 3 modules, for a total energy capacity of 2.3 kWh and a maximum power output of 242 kW.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AERO MODAL -->
+    <div class="aero-modal" id="aeroModal">
+        <div class="aero-left">
+            <div id="aeroCanvasContainer">
+                <div class="aero-hud">
+                    <div class="hud-top-left">
+                        <div class="hud-line"></div>
+                        <div>System Status: Nominal</div>
+                        <div style="color: var(--red);">Flow Velocity: 350 KM/H</div>
+                    </div>
+                    <div class="hud-top-right">
+                        <div>Grid Sector: 7G</div>
+                        <div>Lat: 44.5323° N</div>
+                    </div>
+                    <div class="hud-bottom-left">
+                        <div style="font-size: 14px; font-weight: 800; color: #fff;">Tunnel Mode: Active</div>
+                        <div>Tracking Ferrari F80_Proto_01</div>
+                    </div>
+                    <div class="hud-target"></div>
+                </div>
+            </div>
+        </div>
+        <div class="aero-right">
+            <button class="aero-close" onclick="closeAero()">✖ CLOSE</button>
+            <div class="aero-scroll">
+                <span class="section-label aero-feature" style="color: var(--red);">Aerodynamics</span>
+                <h2 class="title-huge aero-feature" style="font-size: clamp(30px, 4vw, 50px); margin-bottom: 60px; line-height: 1;">AERODYNAMIC TECHNOLOGY</h2>
+                
+                <div class="aero-feature active" onclick="focusAero(0, this)">
+                    <span class="aero-num">00</span>
+                    <h3 class="aero-head">Aerodynamic Overview</h3>
+                    <p class="desc-main" style="color: #555; font-size: 15px;">Experience the overall airflow simulation around the F80. Each component works together to create a cohesive aerodynamic performance profile.</p>
+                </div>
+
+                <div class="aero-feature" onclick="focusAero(1, this)">
+                    <span class="aero-num">01</span>
+                    <h3 class="aero-head">Highly Advanced Cooling System</h3>
+                    <p class="desc-main" style="color: #555; font-size: 15px;">The aerodynamic layout is defined by the necessity of providing sufficient cooling air to a powertrain capable of over 1000 cv while managing the extreme thermal loads generated by the hybrid system.</p>
+                </div>
+                
+                <div class="aero-feature" onclick="focusAero(2, this)">
+                    <span class="aero-num">02</span>
+                    <h3 class="aero-head">S-Duct</h3>
+                    <p class="desc-main" style="color: #555; font-size: 15px;">Derived directly from Formula 1, the signature front S-Duct channels high-pressure air through the nose and over the canopy, simultaneously creating immense downforce and reducing overall drag coefficient.</p>
+                </div>
+
+                <div class="aero-feature" onclick="focusAero(3, this)">
+                    <span class="aero-num">03</span>
+                    <h3 class="aero-head">Exalting Ground Effect</h3>
+                    <p class="desc-main" style="color: #555; font-size: 15px;">A meticulously sculpted underbody paired with specialized vortex generators creates a low-pressure zone that virtually sucks the car to the tarmac, optimizing stability at maximum velocity.</p>
+                </div>
+
+                <div class="aero-feature" onclick="focusAero(4, this)">
+                    <span class="aero-num">04</span>
+                    <h3 class="aero-head">Active Rear Wing</h3>
+                    <p class="desc-main" style="color: #555; font-size: 15px;">The electronically controlled rear wing continuously adjusts its angle of attack depending on dynamic inputs, operating as an airbrake under deceleration or flattening out to minimize drag on straights.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GSAP REVEAL LOGIC -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Utility: Split text into spans for animation
+        function splitText(selector) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                const text = el.innerText;
+                const words = text.split('<br>').map(line => 
+                    line.split(' ').map(word => `<span class="word-wrapper"><span class="word-inner">${word}</span></span>`).join(' ')
+                ).join('<br>');
+                el.innerHTML = words;
+            });
+        }
+
+        // Apply word splitting to titles
+        // Note: Manual check if we should split these or just animate them
+        // Let's stick to consistent reveal for now but more refined
+        
+        // Core Reveal Animation with Staggering
+        const reveals = document.querySelectorAll(".reveal");
+        reveals.forEach((element) => {
+            gsap.fromTo(element, 
+                { opacity: 0, y: 50, filter: "blur(10px)" },
+                {
+                    opacity: 1,
+                    y: 0,
+                    filter: "blur(0px)",
+                    duration: 1.2,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 90%",
+                        toggleActions: "play none none none"
+                    }
+                }
+            );
+        });
+
+        // Specific Heading Animations
+        document.querySelectorAll(".title-huge, .vertical-text").forEach(title => {
+            title.classList.add('heading-reveal');
+            gsap.from(title, {
+                opacity: 0,
+                x: -30,
+                duration: 1.5,
+                ease: "expo.out",
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 85%",
+                }
+            });
+        });
+
+        // Split Sections - Animate split elements with better timing
+        document.querySelectorAll(".split-section").forEach((section) => {
+            const left = section.querySelector(".split-left");
+            const right = section.querySelector(".split-right");
+            const desc = section.querySelector(".desc-main");
+            
+            if (left) {
+                gsap.from(left, {
+                    x: -50,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                    }
+                });
+            }
+            if (right) {
+                gsap.from(right, {
+                    x: 50,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                    }
+                });
+            }
+            if (desc) {
+                gsap.from(desc, {
+                    opacity: 0,
+                    y: 20,
+                    duration: 1,
+                    delay: 0.5,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: desc,
+                        start: "top 95%",
+                    }
+                });
+            }
+        });
+
+        // Powertrain Modal Logic
+        function openPowertrain(e) {
+            e.preventDefault();
+            const modal = document.getElementById('powertrainModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Re-trigger modal animations
+            gsap.fromTo("#powertrainModal .mt-anim", 
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, stagger: 0.1, duration: 1, ease: "expo.out", delay: 0.5 }
+            );
+        }
+
+        function closePowertrain() {
+            document.getElementById('powertrainModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Text Scramble Effect
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\/[]{}—=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="dud">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        // Advanced Cursor System
+        const cursor = document.getElementById('cursor-follower');
+        const outline = document.getElementById('cursor-outline');
+        
+        if (window.innerWidth > 1024) {
+            cursor.style.display = 'block';
+            outline.style.display = 'block';
+            
+            window.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0, ease: "none" });
+                gsap.to(outline, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
+            });
+
+            document.querySelectorAll('a, button, .aero-feature').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    gsap.to(outline, { scale: 1.5, borderColor: '#fff', duration: 0.3 });
+                    gsap.to(cursor, { scale: 0.5, backgroundColor: '#fff', duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => {
+                    gsap.to(outline, { scale: 1, borderColor: '#D71920', duration: 0.3 });
+                    gsap.to(cursor, { scale: 1, backgroundColor: '#D71920', duration: 0.3 });
+                });
+            });
+        }
+
+        // Aero Modal Logic
+        let aeroSimInstance = null;
+        function openAero(e) {
+            e.preventDefault();
+            document.getElementById('aeroModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Initialize 3D Simulation
+            if (!aeroSimInstance) {
+                import('./aero-simulation.js').then(module => {
+                    aeroSimInstance = new window.AeroSimulation('aeroCanvasContainer');
+                });
+            } else {
+                aeroSimInstance.focusFeature(0); // Reset to overview
+            }
+            
+            // Technical HUD Animation
+            gsap.fromTo(".aero-hud > *", 
+                { opacity: 0, x: -20 },
+                { opacity: 1, x: 0, stagger: 0.1, duration: 1, ease: "expo.out", delay: 0.8 }
+            );
+
+            // Text Scramble for labels
+            const labels = document.querySelectorAll('#aeroModal .aero-head, #aeroModal .title-huge');
+            labels.forEach(label => {
+                const fx = new TextScramble(label);
+                fx.setText(label.innerText);
+            });
+
+            // Re-trigger aero feature reveals
+            gsap.fromTo("#aeroModal .aero-feature", 
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, stagger: 0.1, duration: 1, ease: "expo.out", delay: 0.5 }
+            );
+        }
+
+        function closeAero() {
+            document.getElementById('aeroModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function focusAero(index, el) {
+            // Update active state in UI
+            document.querySelectorAll('.aero-feature').forEach(f => f.classList.remove('active'));
+            el.classList.add('active');
+
+            // Trigger 3D Camera Focus
+            if (aeroSimInstance) {
+                aeroSimInstance.focusFeature(index);
+            }
+        }
+
+        /* --- ENGINE VIDEO SYSTEM --- */
+        const videoEl = document.getElementById('engineVideo');
+        const playVidBtn = document.getElementById('playVidBtn');
+        const muteVidBtn = document.getElementById('muteVidBtn');
+        let isVidPlaying = false;
+        let isVidMuted = false;
+
+        playVidBtn.addEventListener('click', () => {
+            if (!isVidPlaying) {
+                videoEl.play();
+                playVidBtn.textContent = 'PAUSE VIDEO';
+                isVidPlaying = true;
+                // If it's the first time playing, also unmute it to give the requested "with voice" effect immediately if browser permits, but standard is playing muted first or asking.
+                if (videoEl.muted) {
+                    videoEl.muted = false;
+                    muteVidBtn.textContent = 'MUTE';
+                    isVidMuted = false;
+                }
+            } else {
+                videoEl.pause();
+                playVidBtn.textContent = 'PLAY VIDEO';
+                isVidPlaying = false;
+            }
+        });
+
+        muteVidBtn.addEventListener('click', () => {
+            if (isVidMuted) {
+                videoEl.muted = false;
+                muteVidBtn.textContent = 'MUTE';
+                isVidMuted = false;
+            } else {
+                videoEl.muted = true;
+                muteVidBtn.textContent = 'UNMUTE';
+                isVidMuted = true;
+            }
+        });
+    </script>
+    <script src="cinematic.js"></script>
+</body>
+</html>

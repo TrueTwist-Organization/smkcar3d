@@ -1,0 +1,1091 @@
+/* 
+   SMK CAR - CINEMATIC ENGINE v4.0
+   Design: Ultra-Premium Studio (Light Mode)
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    --bg: #0A0A0A;
+    --bg-alt: #121212;
+    --text-primary: #FFFFFF;
+    --text-dim: #A0A0A5;
+    --red: #D71920; /* Racing Red Accent */
+    --accent: var(--red);
+    --border: rgba(255,255,255,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- TYPOGRAPHY --- */
+h1, h2, h3, h4 {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+/* --- GLOBAL 3D TITLE HOVER EFFECT --- */
+h1, h2, h3, h4, h5, h6, .section-title-xl, .about-title, .hero-title, .exp-heading, .supercar-title, .kings-title, .hero-title-large, .brand-name, p, span, li {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2), color 0.4s ease, text-shadow 0.4s ease;
+    will-change: transform;
+}
+
+h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover, .section-title-xl:hover, .about-title:hover, .hero-title:hover, .exp-heading:hover, .supercar-title:hover, .kings-title:hover, .hero-title-large:hover, .brand-name:hover {
+    transform: scale(1.04) translateY(-3px);
+    color: var(--red) !important;
+    text-shadow: 
+        -2px 2px 4px rgba(158,17,22,0.3),
+        -4px 4px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    position: relative;
+}
+
+/* Base Hover Highlight for paragraphs and spans */
+p:hover, span:hover, li:hover {
+    color: #000;
+    text-shadow: 0 0 8px rgba(215, 25, 32, 0.2);
+}
+
+/* Simplified redundant hover block */
+
+/* --- NAVIGATION --- */
+nav {
+    position: fixed;
+    top: 0; width: 100%;
+    z-index: 1000;
+    padding: 30px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    background: transparent;
+}
+
+nav.scrolled {
+    padding: 16px 80px;
+    background: rgba(10, 10, 10, 0.88);
+    backdrop-filter: blur(24px) saturate(180%);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 0.5em;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    font-family: 'Bebas Neue', sans-serif;
+}
+.logo span { color: var(--red); }
+
+.brand-logo { 
+    height: 38px; width: auto; vertical-align: middle; 
+    margin-right: 14px; position: relative; top: -1px;
+    transition: all 0.45s cubic-bezier(0.19,1,0.22,1);
+}
+
+.logo:hover .brand-logo, .nav-logo:hover .brand-logo, .footer-logo:hover .brand-logo { 
+    transform: scale(1.1) rotate(-5deg); 
+}
+
+.logo:hover {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    transition: 0.3s;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0%; height: 2px;
+    background: var(--accent);
+    transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--text-primary);
+}
+
+.nav-links a:hover::after, .nav-links a.active::after {
+    width: 100%;
+}
+
+/* --- MOBILE NAV TOGGLE --- */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 1001;
+    padding: 10px;
+}
+.nav-toggle span {
+    width: 28px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    transform-origin: center;
+}
+
+@media (max-width: 1024px) {
+    nav { padding: 24px 40px; }
+    nav.scrolled { padding: 14px 40px; }
+    .nav-links { gap: 24px; }
+}
+
+@media (max-width: 768px) {
+    .nav-toggle { display: flex; }
+    
+    .nav-links {
+        position: fixed;
+        top: 0; right: -100%;
+        width: 100%; height: 100vh;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        z-index: 1000;
+    }
+    
+    .nav-links.active {
+        right: 0;
+    }
+    
+    .nav-links a {
+        font-size: 24px;
+        letter-spacing: 0.2em;
+    }
+
+    /* Toggle Animation */
+    .nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+    .nav-toggle.active span:nth-child(2) { opacity: 0; }
+    .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+}
+
+/* --- 3D STUDIO HERO --- */
+.split-hero {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Soft premium studio lighting gradient */
+    background: radial-gradient(circle at center, #1A1A1A 0%, #0A0A0A 100%);
+    overflow: hidden;
+}
+
+.split-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+.split-hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+    margin-top: -100px;
+}
+
+.hero-title {
+    font-size: 11vw;
+    line-height: 0.8;
+    color: var(--text-primary);
+    text-shadow: 0 20px 50px rgba(0,0,0,0.05);
+}
+
+.model-wrapper {
+    position: absolute;
+    top: 55%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw; height: 90vh;
+    z-index: 5;
+    cursor: grab;
+}
+
+.model-wrapper:active {
+    cursor: grabbing;
+}
+
+/* Base Hero for Subpages */
+.hero {
+    height: 80vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #000;
+}
+.hero-img {
+    position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.8;
+}
+.hero-content {
+    position: relative; z-index: 10; text-align: center; color: white;
+}
+
+/* --- SECTIONS BASE --- */
+.section {
+    padding: 150px 80px;
+    position: relative;
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 1000px;
+}
+
+.section-header {
+    margin-bottom: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.section-title {
+    font-size: 5vw;
+    line-height: 0.9;
+    color: var(--text-primary);
+}
+
+/* --- ABOUT SECTION --- */
+.about-text {
+    font-size: 36px;
+    line-height: 1.5;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--text-dim);
+    max-width: 900px;
+}
+.about-text span {
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 800;
+}
+
+/* --- CARDS --- */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.dark-card {
+    position: relative;
+    height: 550px;
+    background: #111111;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 50px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    border: 1px solid var(--border);
+    transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.dark-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+}
+
+.dark-card img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity: 0.75;
+    filter: brightness(0.9);
+    transform: none;
+}
+
+.dark-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+    z-index: 5;
+    transition: 0.4s;
+}
+
+.dark-card:hover img {
+    transform: scale(1.08);
+    opacity: 1;
+    filter: brightness(1);
+}
+
+.dark-card:hover::after {
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+}
+
+.dark-card-content {
+    position: relative;
+    z-index: 10;
+    transition: 0.4s;
+}
+
+.dark-card h2 {
+    font-size: 32px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.dark-card p {
+    color: var(--text-dim);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.explore-btn {
+    opacity: 0;
+    margin-top: 20px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.4s;
+    transform: translateX(-10px);
+}
+
+.dark-card:hover .explore-btn {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.car-specs {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.dark-card:hover .car-specs {
+    opacity: 1;
+}
+
+.spec {
+    background: var(--bg-alt);
+    padding: 10px 15px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+/* --- EXPERIENCE --- */
+.experience-section {
+    height: 80vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #000;
+}
+.experience-section img {
+    position: absolute;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.3;
+}
+.experience-text {
+    position: relative;
+    z-index: 10;
+    font-size: 6vw;
+    color: #FFF;
+    text-align: center;
+    letter-spacing: 0.1em;
+}
+
+/* --- PREMIUM BUTTON SYSTEM --- */
+.btn-primary, .btn-smk, .btn-premium {
+    padding: 18px 48px;
+    background: var(--text-primary);
+    color: #FFF;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px; /* Pill Shape */
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary::before, .btn-smk::before, .btn-premium::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.btn-primary:hover, .btn-smk:hover, .btn-premium:hover {
+    background: var(--red);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(215, 25, 32, 0.4);
+    letter-spacing: 0.45em;
+}
+
+.btn-primary:hover::before, .btn-smk:hover::before, .btn-premium:hover::before {
+    left: 100%;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .grid-layout { grid-template-columns: repeat(2, 1fr); }
+    nav { padding: 30px; }
+}
+@media (max-width: 768px) {
+    .grid-layout { grid-template-columns: 1fr; }
+    .hero-title { font-size: 14vw; }
+    .nav-links { display: none; }
+    .section { padding: 100px 30px; }
+    .about-text { font-size: 24px; }
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #CCC; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* --- TOP SUPERCAR BRANDS SECTION --- */
+.supercar-section {
+    background: #0A0A0A;
+    color: #FFF;
+    padding: 150px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.supercar-section::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(215, 25, 32, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.supercar-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.supercar-title {
+    font-size: 4vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    color: #FFF;
+}
+
+.supercar-subtitle {
+    font-size: 14px;
+    color: #555;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+.supercar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    position: relative;
+    z-index: 2;
+    perspective: 1200px;
+}
+
+.supercar-card {
+    position: relative;
+    height: 450px;
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px;
+    background: #000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.supercar-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    box-shadow: 0 0 0 0 rgba(215, 25, 32, 0);
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+.supercar-card:hover {
+    transform: rotateX(8deg) rotateY(-5deg) translateY(-20px) scale(1.05);
+    box-shadow: -20px 30px 60px rgba(0,0,0,0.15), inset 0 0 40px rgba(215, 25, 32, 0.05);
+}
+
+.supercar-card:hover::after {
+    box-shadow: 0 20px 50px rgba(215, 25, 32, 0.2);
+}
+
+.supercar-card img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    transition: 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity: 0.4;
+    filter: brightness(0.6) grayscale(80%);
+}
+
+.supercar-card:hover img {
+    transform: scale(1.1);
+    opacity: 0.8;
+    filter: brightness(0.8) grayscale(0%);
+}
+
+.supercar-card-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    z-index: 1;
+}
+
+.supercar-card-content {
+    position: relative;
+    z-index: 2;
+    transition: 0.5s;
+    transform: translateY(20px);
+}
+
+.supercar-card:hover .supercar-card-content {
+    transform: translateY(0);
+}
+
+.supercar-card h3 {
+    font-size: 32px;
+    color: #FFF;
+    margin-bottom: 15px;
+    letter-spacing: 0.1em;
+    font-weight: 800;
+}
+
+.supercar-card p {
+    color: #CCC;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+.supercar-explore {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: 0.5s;
+    transform: translateX(-10px);
+}
+
+.supercar-card:hover .supercar-explore {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+    .supercar-section { padding: 100px 30px; }
+    .supercar-title { font-size: 8vw; }
+}
+
+/* --- DISCOVER HERO ADVANCED UI --- */
+.discover-hero {
+    position: relative;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(215, 25, 32, 0.2);
+}
+
+.hero-bg-animated {
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(215, 25, 32, 0.15) 0%, transparent 60%);
+    animation: pulseGlow 8s infinite alternate cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
+    100% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+}
+
+.hero-grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 1;
+    transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+    transform-origin: top;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 60px; }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeInUp 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards 0.5s;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.hero-label {
+    display: inline-block;
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.4em;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    border: 1px solid rgba(215, 25, 32, 0.3);
+    padding: 8px 24px;
+    border-radius: 30px;
+    background: rgba(215, 25, 32, 0.05);
+    box-shadow: 0 0 20px rgba(215,25,32,0.1);
+}
+
+.hero-title-large {
+    font-size: 7vw;
+    font-weight: 900;
+    color: #FFF;
+    letter-spacing: 0.05em;
+    margin-bottom: 25px;
+    line-height: 1;
+    text-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.highlight-text {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+    position: relative;
+    display: inline-block;
+}
+
+.highlight-text::after {
+    content: 'COLLECTION';
+    position: absolute;
+    left: 0; top: 0;
+    color: #FFF;
+    -webkit-text-stroke: 0px;
+    width: 0%;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: fillText 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards 1.2s;
+    border-right: 2px solid var(--red);
+}
+
+@keyframes fillText {
+    0% { width: 0%; border-color: transparent; }
+    50% { border-color: var(--red); }
+    100% { width: 100%; border-color: transparent; }
+}
+
+.hero-description {
+    color: #888;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 10;
+    color: #555;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    opacity: 0;
+    animation: fadeIn 1s forwards 2.5s;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.scroll-indicator .mouse {
+    width: 22px; height: 34px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    position: relative;
+}
+
+.scroll-indicator .mouse::after {
+    content: '';
+    position: absolute;
+    top: 5px; left: 50%;
+    transform: translateX(-50%);
+    width: 2px; height: 6px;
+    background: var(--red);
+    border-radius: 2px;
+    animation: scrollDown 2s infinite cubic-bezier(0.19, 1, 0.22, 1);
+}
+/* --- ONE OF THE KINGS (IMAGE 1 STYLE) --- */
+.kings-container {
+    background: #0A0A0A;
+    padding: 100px 80px 40px 80px;
+    color: #FFF;
+}
+
+.kings-header {
+    margin-bottom: 60px;
+}
+
+.kings-title {
+    font-size: 6vw;
+    font-weight: 900;
+    line-height: 0.85;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+.kings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.king-card {
+    position: relative;
+    height: 600px;
+    background: #F0F0F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.king-card img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    filter: brightness(0.9) contrast(1.1);
+    transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.king-card:hover img {
+    transform: scale(1.05);
+    opacity: 1;
+}
+
+.king-card h2 {
+    position: relative;
+    z-index: 2;
+    color: #000;
+    font-size: 4vw;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-shadow: none;
+    transition: 0.4s;
+}
+
+.king-card:hover h2 {
+    transform: scale(1.1);
+}
+
+.kings-footer {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 30px;
+}
+
+.kings-footer .logo-small {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.5em;
+    color: #000;
+}
+
+.kings-footer-nav {
+    display: flex;
+    gap: 40px;
+}
+
+.kings-footer-nav a {
+    text-decoration: none;
+    color: #777;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    transition: 0.3s;
+}
+
+.kings-footer-nav a:hover {
+    color: #000;
+}
+
+/* --- LAMBORGHINI ELECTRIFICATION (IMAGE 2 STYLE) --- */
+.lambo-hero {
+    background: #000;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.lambo-nav {
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #FFF;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.lambo-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.lambo-nav-center {
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+}
+
+.lambo-nav-right {
+    display: flex;
+    gap: 20px;
+}
+
+.lambo-content-split {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.lambo-image-side {
+    position: relative;
+    overflow: hidden;
+}
+
+.lambo-image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lambo-text-side {
+    background: #000;
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #FFF;
+}
+
+.lambo-text-side h1 {
+    font-size: 5vw;
+    line-height: 0.9;
+    margin-bottom: 30px;
+    letter-spacing: 0.05em;
+}
+
+.lambo-text-side p {
+    font-size: 14px;
+    color: #AAA;
+    max-width: 450px;
+    line-height: 1.8;
+    margin-bottom: 50px;
+}
+
+.btn-lambo-discover {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: #FFD200;
+    color: #000;
+    padding: 18px 35px;
+    text-decoration: none;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    width: fit-content;
+    transition: 0.4s;
+}
+
+.btn-lambo-discover:hover {
+    background: #FFF;
+    transform: translateX(10px);
+}
+
+/* ============================================
+   CINEMATIC ANIMATION LAYER (NON-DESTRUCTIVE)
+   Inspired by Ferrari’s Ultra-Premium Motion
+   ============================================ */
+
+:root {
+    --ease-premium: cubic-bezier(0.19, 1, 0.22, 1);
+    --anim-duration: 1.2s;
+}
+
+/* SECTION DEPTH TRANSITION STATES */
+section, .section {
+    position: relative;
+    will-change: transform, opacity, filter;
+    transition: transform var(--anim-duration) var(--ease-premium), 
+                filter var(--anim-duration) var(--ease-premium), 
+                opacity var(--anim-duration) var(--ease-premium);
+}
+
+/* AUTOMATIC STAGGER REVEAL CLASSES */
+.reveal-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: transform 1s var(--ease-premium), 
+                opacity 1s var(--ease-premium);
+}
+
+.reveal-item.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* IMAGE PARALLAX INITIAL STATE */
+.parallax-container {
+    overflow: hidden;
+}
+
+.parallax-container img {
+    will-change: transform;
+    transition: transform 0.1s linear;
+}
+
+/* SMOOTH SCROLL OVERRIDE */
+.lenis-scroll {
+    overflow-y: auto;
+}
+
+/* PREVENT LAYOUT JUMPS DURING ANIM */
+.animating-section {
+    pointer-events: none;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 768px) {
+    :root {
+        --anim-duration: 0.8s;
+    }
+    .reveal-item {
+        transform: translateY(20px);
+    }
+}

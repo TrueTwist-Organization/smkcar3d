@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMK CAR | Architects of Hyper-Automotive Destiny</title>
+    <meta name="description" content="SMK CAR curates the world's most exclusive hypercars. Experience pure velocity — sourced, verified and delivered for the apex tier.">
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+    /* ============================================
+       SMK CAR — PREMIUM WHITE EDITION
+    ============================================ */
+    :root {
+        --bg:          #0A0A0A;
+        --bg-alt:      #121212;
+        --bg-section:  #181818;
+        --text-primary:#FFFFFF;
+        --text-muted:  #A0A0A5;
+        --text-dim:    #66666A;
+        --accent:      #D71920;
+        --accent-soft: rgba(215,25,32,0.12);
+        --accent-glow: rgba(215,25,32,0.4);
+        --border:      rgba(255,255,255,0.1);
+        --border-red:  rgba(215,25,32,0.2);
+        --shadow-sm:   0 2px 12px rgba(0,0,0,0.05);
+        --shadow-md:   0 10px 40px rgba(0,0,0,0.08);
+        --shadow-lg:   0 30px 80px rgba(0,0,0,0.12);
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family: 'Outfit', sans-serif;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.6;
+    }
+
+    /* ---- TEXT HOVER HIGHLIGHTS ---- */
+    h1, h2, h3, p, span, .nav-links a {
+        transition: color 0.35s cubic-bezier(0.19,1,0.22,1), text-shadow 0.35s cubic-bezier(0.19,1,0.22,1), transform 0.35s cubic-bezier(0.19,1,0.22,1);
+    }
+    h1:hover, h2:hover, h3:hover, .hero-title:hover {
+        color: var(--accent) !important;
+        text-shadow: 0 0 20px rgba(215,25,32,0.4), 0 0 40px rgba(215,25,32,0.2);
+        transform: translateY(-5px) scale(1.02);
+    }
+    p:hover, span:hover, .section-eyebrow:hover {
+        color: var(--text-primary) !important;
+        text-shadow: 0 0 15px rgba(215,25,32,0.15);
+        transform: scale(1.01);
+    }
+    .logo:hover {
+        text-shadow: 0 0 20px rgba(215,25,32,0.5);
+    }
+
+    /* ---- PRELOADER ---- */
+    #preloader {
+        position: fixed; inset: 0;
+        background: #0A0A0A;
+        z-index: 9999;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 28px;
+    }
+    .pre-logo {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(42px, 8vw, 80px);
+        letter-spacing: 0.45em;
+        color: var(--text-primary);
+        opacity: 0;
+        animation: pl-fadein 0.7s ease forwards 0.3s;
+    }
+    .pre-logo span { color: var(--accent); }
+    .pre-bar-wrap {
+        width: 200px; height: 1px;
+        background: var(--border);
+        overflow: hidden;
+        position: relative;
+    }
+    .pre-bar {
+        height: 100%;
+        background: var(--accent);
+        width: 0;
+        animation: pl-bar 0.6s cubic-bezier(0.19,1,0.22,1) forwards 0.3s;
+    }
+    .pre-pct {
+        font-size: 10px; font-weight: 700;
+        letter-spacing: 0.45em;
+        color: var(--text-dim);
+    }
+    @keyframes pl-fadein { to { opacity: 1; } }
+    @keyframes pl-bar    { to { width: 100%; } }
+
+    /* ---- AMBIENT CANVAS ---- */
+    #particle-canvas {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.55;
+    }
+
+    /* ---- NAVBAR ---- */
+    #navbar {
+        position: fixed; top: 0; width: 100%;
+        z-index: 1000;
+        padding: 30px 80px;
+        display: flex; align-items: center; justify-content: space-between;
+        transition: all 0.55s cubic-bezier(0.19,1,0.22,1);
+    }
+    #navbar.scrolled {
+        padding: 16px 80px;
+        background: rgba(10,10,10,0.85);
+        backdrop-filter: blur(24px) saturate(180%);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 8px 35px rgba(0,0,0,0.06);
+    }
+    .nav-logo {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 26px; letter-spacing: 0.5em;
+        color: var(--text-primary);
+        text-decoration: none;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-logo.light-logo { color: #fff; }
+    .nav-logo span { color: var(--accent); }
+    .nav-logo::after {
+        content: ''; position: absolute;
+        bottom: -3px; left: 0;
+        width: 0; height: 2px;
+        background: var(--accent);
+        transition: 0.4s;
+    }
+    .nav-logo:hover::after { width: 100%; }
+
+    .nav-links { display: flex; align-items: center; gap: 44px; }
+    .nav-links a {
+        text-decoration: none;
+        font-size: 10px; font-weight: 700;
+        letter-spacing: 0.38em; text-transform: uppercase;
+        color: var(--text-muted);
+        position: relative; padding-bottom: 4px;
+        transition: color 0.3s;
+    }
+    .nav-links a::after {
+        content: ''; position: absolute;
+        bottom: 0; left: 0;
+        width: 0%; height: 1.5px;
+        background: var(--accent);
+        transition: 0.4s cubic-bezier(0.19,1,0.22,1);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+
+    /* Hero nav links (on video, so white) */
+    .hero-nav .nav-links a { color: rgba(255,255,255,0.65); }
+    .hero-nav .nav-links a:hover,
+    .hero-nav .nav-links a.active { color: #fff; }
+    .hero-nav.scrolled .nav-links a { color: var(--text-muted); }
+    .hero-nav.scrolled .nav-links a:hover { color: var(--text-primary); }
+    .hero-nav.scrolled .nav-logo.light-logo { color: var(--text-primary); }
+
+    .nav-cta {
+        padding: 12px 32px !important;
+        border: 2px solid var(--accent) !important;
+        color: var(--accent) !important;
+        font-size: 11px !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.35em !important;
+        background: transparent;
+        transition: all 0.5s cubic-bezier(0.19,1,0.22,1) !important;
+        border-radius: 50px !important;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover {
+        background: var(--accent) !important;
+        color: #fff !important;
+        box-shadow: 0 15px 30px var(--accent-glow);
+        transform: translateY(-3px) scale(1.05);
+    }
+
+    /* ---- HERO ---- */
+    #hero {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        display: flex; align-items: flex-end;
+    }
+    .hero-video-bg {
+        position: absolute; inset: 0;
+    }
+    .hero-video-bg video {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: brightness(0.85) saturate(0.9);
+    }
+    /* Gradient: dark-left for text, lighter right */
+    .hero-overlay {
+        position: absolute; inset: 0;
+        background:
+            linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 60%, transparent 100%),
+            linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 55%);
+    }
+    /* Subtle grid — white lines */
+    .hero-grid {
+        position: absolute; inset: 0;
+        background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 70px 70px;
+        pointer-events: none;
+    }
+    .hero-content {
+        position: relative; z-index: 10;
+        padding: 0 80px 90px;
+        max-width: 900px;
+    }
+    .hero-eyebrow {
+        display: inline-flex; align-items: center; gap: 12px;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.55em; text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 26px;
+        opacity: 0; transform: translateY(20px);
+    }
+    .eyebrow-line {
+        display: inline-block;
+        width: 36px; height: 1px;
+        background: var(--accent);
+    }
+    .hero-h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(72px, 13vw, 165px);
+        line-height: 0.84;
+        letter-spacing: 0.02em;
+        color: #fff;
+        opacity: 0; transform: translateY(60px);
+    }
+    .hero-h1 .red { color: var(--accent); display: block; }
+    .hero-sub {
+        margin-top: 28px;
+        font-size: 13px; line-height: 1.9;
+        color: rgba(255,255,255,0.6);
+        letter-spacing: 0.1em;
+        max-width: 420px;
+        opacity: 0; transform: translateY(25px);
+    }
+    .hero-actions {
+        margin-top: 44px;
+        display: flex; align-items: center; gap: 24px;
+        opacity: 0; transform: translateY(25px);
+    }
+    .btn-hero {
+        padding: 18px 48px;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px; font-weight: 900;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        display: inline-flex; align-items: center; gap: 14px;
+        transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+        position: relative; overflow: hidden;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-hero::before {
+        content: '';
+        position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: 0.6s;
+    }
+    .btn-hero:hover::before { left: 100%; }
+    .btn-hero:hover {
+        box-shadow: 0 20px 50px var(--accent-glow);
+        transform: translateY(-5px) scale(1.05);
+        background: #ff1f26;
+    }
+    .btn-ghost {
+        padding: 18px 48px;
+        border: 2px solid rgba(255,255,255,0.35);
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px; font-weight: 900;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        display: inline-flex; align-items: center; gap: 14px;
+        transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+        border-radius: 50px;
+    }
+    .btn-ghost:hover {
+        border-color: #fff;
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(255,255,255,0.1);
+    }
+
+    /* Scroll indicator */
+    .hero-scroll {
+        position: absolute; right: 80px; bottom: 80px;
+        z-index: 10;
+        display: flex; flex-direction: column; align-items: center; gap: 10px;
+        opacity: 0;
+    }
+    .hero-scroll span {
+        writing-mode: vertical-rl;
+        font-size: 8px; font-weight: 700;
+        letter-spacing: 0.5em; text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+    }
+    .scroll-line {
+        width: 1px; height: 55px;
+        background: linear-gradient(to bottom, transparent, var(--accent));
+        animation: scrl 2s ease-in-out infinite;
+    }
+    @keyframes scrl {
+        0%,100% { opacity:0.3; transform: scaleY(0.5); }
+        50%      { opacity:1;   transform: scaleY(1); }
+    }
+
+    /* Stats Glass Strip */
+    .hero-stats {
+        position: absolute;
+        bottom: 58px; right: 0; left: auto;
+        z-index: 10;
+        display: flex;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255,255,255,0.1);
+        border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .h-stat {
+        padding: 22px 42px;
+        border-right: 1px solid rgba(255,255,255,0.1);
+        text-align: center;
+    }
+    .h-stat:last-child { border-right: none; }
+    .h-stat-num {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 34px; line-height: 1; letter-spacing: 0.05em;
+        color: #FFFFFF;
+    }
+    .h-stat-num span { color: var(--accent); }
+    .h-stat-label {
+        font-size: 8px; font-weight: 700;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        color: rgba(255,255,255,0.7);
+        margin-top: 5px;
+    }
+
+    /* ---- MARQUEE ---- */
+    .marquee-section {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        background: rgba(0,0,0,0.15);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        overflow: hidden; padding: 20px 0;
+        position: absolute; bottom: 0; left: 0; width: 100%; z-index: 5;
+    }
+    .marquee-track {
+        display: flex; width: max-content;
+        animation: mq 30s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes mq { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+    .mq-item {
+        display: inline-flex; align-items: center; gap: 36px;
+        padding: 0 44px;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 16px; letter-spacing: 0.4em;
+        color: rgba(255, 255, 255, 0.65);
+        white-space: nowrap;
+        transition: color 0.3s; cursor: default;
+    }
+    .mq-item:hover { color: #fff; }
+    .mq-dot {
+        width: 4px; height: 4px; border-radius: 50%;
+        background: var(--accent); opacity: 0.5; flex-shrink: 0;
+    }
+
+    /* ---- ABOUT ---- */
+    #about {
+        position: relative;
+        padding: 140px 80px;
+        overflow: hidden;
+        background: var(--bg);
+    }
+    .about-video-bg {
+        position: absolute; inset: 0;
+    }
+    .about-video-bg video {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: brightness(1) saturate(1.2);
+        opacity: 1;
+    }
+    .about-light-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 100%);
+    }
+    .about-inner {
+        position: relative; z-index: 3;
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 100px; align-items: center;
+    }
+    .section-eyebrow {
+        display: inline-flex; align-items: center; gap: 10px;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.5em; text-transform: uppercase;
+        color: var(--accent); margin-bottom: 28px;
+    }
+    #about .section-eyebrow { color: #ff4a4a; }
+
+    /* --- HIGHLIGHT BOX (HOVER EFFECT) --- */
+    .highlight-box {
+        transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+        border: 2px solid transparent;
+        padding: 24px;
+        border-radius: 12px;
+        position: relative;
+        z-index: 50;
+    }
+    .highlight-box:hover {
+        border-color: #D71920 !important;
+        background: rgba(215, 25, 32, 0.08) !important;
+        box-shadow: 0 0 40px rgba(215, 25, 32, 0.15) !important;
+        transform: scale(1.03) !important;
+    }
+
+
+    .about-title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(56px, 7vw, 96px);
+        line-height: 0.84; letter-spacing: 0.02em;
+        color: #FFFFFF;
+        margin-bottom: 34px;
+    }
+    .about-body {
+        font-size: 15px; line-height: 2;
+        color: rgba(255,255,255,0.85); max-width: 460px;
+        margin-bottom: 14px;
+    }
+    .about-body strong { color: #FFFFFF; font-weight: 700; }
+    .about-link {
+        display: inline-flex; align-items: center; gap: 12px;
+        font-size: 11px; font-weight: 800;
+        letter-spacing: 0.35em; text-transform: uppercase;
+        color: #FFFFFF; text-decoration: none;
+        background: var(--accent);
+        padding: 14px 32px;
+        margin-top: 28px;
+        transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
+        border-bottom: none;
+    }
+    .about-link:hover {
+        background: #FFFFFF;
+        color: var(--accent);
+        transform: translateX(6px);
+        box-shadow: 0 10px 30px rgba(215,25,32,0.3);
+    }
+
+    /* Stat blocks — white style */
+    .about-right { display: flex; flex-direction: column; gap: 1px; }
+    .stat-block {
+        padding: 38px 44px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(0,0,0,0.35);
+        backdrop-filter: blur(10px);
+        position: relative; overflow: hidden;
+        transition: all 0.4s; cursor: default;
+    }
+    .stat-block::before {
+        content: ''; position: absolute;
+        left: 0; top: 0;
+        width: 3px; height: 0%;
+        background: var(--accent);
+        transition: 0.5s;
+    }
+    .stat-block:hover::before { height: 100%; }
+    .stat-block:hover {
+        background: rgba(215,25,32,0.15);
+        border-color: rgba(215,25,32,0.4);
+        transform: translateX(6px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .stat-num-lg {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 58px; line-height: 1; letter-spacing: 0.02em;
+        color: #FFFFFF;
+    }
+    .stat-num-lg span { color: var(--accent); }
+    .stat-label-sm {
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        color: rgba(255,255,255,0.65); margin-top: 5px;
+    }
+
+    /* ---- BRANDS ---- */
+    #brands {
+        padding: 130px 80px;
+        background: var(--bg-alt);
+    }
+    .section-hdr {
+        display: flex; justify-content: space-between; align-items: flex-end;
+        margin-bottom: 64px;
+    }
+    .section-title-xl {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(52px, 7vw, 105px);
+        line-height: 0.84; letter-spacing: 0.01em;
+        color: var(--text-primary);
+    }
+    .section-title-xl small {
+        display: block;
+        font-family: 'Outfit', sans-serif;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.5em; text-transform: uppercase;
+        color: var(--accent); margin-bottom: 14px;
+    }
+    .see-all {
+        display: inline-flex; align-items: center; gap: 10px;
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        color: var(--text-primary); text-decoration: none;
+        border-bottom: 1px solid var(--text-primary); padding-bottom: 3px;
+        transition: 0.3s;
+    }
+    .see-all:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* Brand cards (Accordion Animation) */
+    .brands-grid { 
+        display: flex; 
+        gap: 2px; 
+    }
+    .brand-card {
+        position: relative; 
+        height: 480px;
+        overflow: hidden; 
+        text-decoration: none;
+        background: #111; 
+        cursor: pointer;
+        flex: 1; /* All share equal space */
+        transition: flex 0.8s cubic-bezier(0.19, 1, 0.22, 1), transform 0.4s ease;
+    }
+    /* Expand on hover */
+    .brand-card:hover {
+        flex: 2.2; /* Shrinks neighbors, grows itself */
+    }
+    .brand-card img {
+        position: absolute; inset: 0;
+        width: 100%; height: 100%; object-fit: cover;
+        filter: brightness(0.8) saturate(0.9);
+        transition: all 0.8s cubic-bezier(0.19,1,0.22,1);
+    }
+    .brand-card::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to top,
+            rgba(0,0,0,0.55) 0%,
+            rgba(0,0,0,0.1) 50%,
+            transparent 100%);
+        z-index: 2; transition: 0.5s;
+    }
+    .brand-card:hover::after {
+        background: linear-gradient(to top,
+            rgba(215,25,32,0.4) 0%,
+            rgba(0,0,0,0.2) 50%,
+            transparent 100%);
+    }
+    .brand-card:hover img {
+        transform: scale(1.08);
+        filter: brightness(0.65) saturate(1.2);
+    }
+    .brand-card-body {
+        position: absolute; bottom: 0; left: 0; width: 100%;
+        padding: 36px; z-index: 5;
+    }
+    .brand-tag {
+        font-size: 8px; font-weight: 700;
+        letter-spacing: 0.5em; text-transform: uppercase;
+        color: var(--accent); margin-bottom: 10px;
+        opacity: 0; transform: translateY(10px);
+        transition: all 0.4s 0.05s;
+    }
+    .brand-card:hover .brand-tag { opacity:1; transform:translateY(0); }
+    .brand-name {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 44px; letter-spacing: 0.1em;
+        color: #fff; display: block;
+        transform: translateY(8px); transition: transform 0.4s;
+    }
+    .brand-card:hover .brand-name { transform: translateY(0); }
+    .brand-discover {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 0.3em; text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+        margin-top: 14px;
+        opacity: 0; transform: translateX(-10px);
+        transition: all 0.4s 0.1s;
+    }
+    .brand-card:hover .brand-discover { opacity:1; transform:translateX(0); }
+
+    /* ---- CTA SPLIT ---- */
+    #experience {
+        display: flex; align-items: center; justify-content: center;
+        min-height: 100vh;
+        background: #000;
+        position: relative;
+    }
+    .exp-img-side {
+        position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden;
+    }
+    .exp-img-side img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        filter: brightness(0.85) saturate(0.9) contrast(1.1);
+        transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), filter 0.8s ease;
+        transform-origin: center center;
+    }
+    .exp-img-side:hover img { 
+        transform: scale(1.15); 
+        filter: brightness(1) saturate(1.1) contrast(1.2);
+    }
+    
+    /* Reveal effect on the side */
+    .exp-img-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+        z-index: 2;
+        transition: opacity 0.8s ease;
+        pointer-events: none;
+    }
+    .exp-img-side:hover .exp-img-overlay { opacity: 0.6; }
+    .exp-text-side {
+        padding: 100px 80px;
+        display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        background: transparent;
+        position: relative;
+        z-index: 3;
+        pointer-events: none;
+    }
+    .exp-text-side > * { pointer-events: auto; }
+    /* Subtle red glow top-right */
+    .exp-text-side::before {
+        content: '';
+        position: absolute; top: -40px; right: -40px;
+        width: 340px; height: 340px; border-radius: 50%;
+        background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .exp-heading {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: clamp(58px, 6.5vw, 96px);
+        line-height: 0.86; letter-spacing: 0.02em;
+        color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        min-height: 2.1em; margin-bottom: 28px;
+    }
+    .exp-desc {
+        font-size: 14px; line-height: 1.95;
+        color: rgba(255, 255, 255, 0.85); max-width: 500px;
+        margin-bottom: 48px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .btn-cta {
+        display: inline-flex; align-items: center; gap: 14px;
+        padding: 17px 46px;
+        background: var(--accent); color: #fff;
+        text-decoration: none;
+        font-size: 9px; font-weight: 800;
+        letter-spacing: 0.4em; text-transform: uppercase;
+        width: fit-content;
+        position: relative; overflow: hidden;
+        transition: all 0.4s;
+    }
+    .btn-cta::after {
+        content: ''; position: absolute; inset: 0;
+        background: rgba(255,255,255,0.12);
+        transform: translateX(-105%); transition: 0.4s;
+    }
+    .btn-cta:hover::after { transform: translateX(0); }
+    .btn-cta:hover {
+        box-shadow: 0 10px 38px var(--accent-glow);
+        transform: translateX(6px);
+    }
+
+    /* ---- PREMIUM FOOTER ---- */
+    footer {
+        background: url('hero-bg.png') center right/cover no-repeat;
+        position: relative;
+        padding: 100px 80px 40px;
+        color: #fff;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        overflow: hidden;
+    }
+    footer::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(to right, 
+            rgba(0,0,0,0.95) 0%, 
+            rgba(0,0,0,0.7) 40%, 
+            rgba(0,0,0,0.3) 100%);
+        z-index: 0;
+    }
+    footer > * { position: relative; z-index: 1; }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 60px;
+        margin-bottom: 80px;
+    }
+
+    .footer-tagline {
+        font-size: 14px;
+        line-height: 1.8;
+        color: rgba(255,255,255,0.5);
+        max-width: 380px;
+        letter-spacing: 0.02em;
+    }
+
+    .footer-col h5 {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 30px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+    .footer-col ul a {
+        text-decoration: none;
+        font-size: 13px;
+        color: rgba(255,255,255,0.6);
+        transition: all 0.3s;
+        display: inline-block;
+        letter-spacing: 0.05em;
+    }
+    .footer-col ul a:hover {
+        color: #fff;
+        transform: translateX(5px);
+    }
+
+    .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 40px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-copy {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.3em;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+    }
+    .footer-nav { display: flex; gap: 20px; }
+    .footer-nav a {
+        color: rgba(255,255,255,0.4);
+        text-decoration: none;
+        display: flex; align-items: center; justify-content: center;
+        transition: 0.3s;
+    }
+    .footer-nav a i {
+        width: 18px; height: 18px;
+    }
+    .footer-nav a:hover { color: var(--accent); transform: translateY(-2px); }
+
+    /* ---- SCROLL REVEAL ---- */
+    .reveal, .reveal-l, .reveal-r {
+        opacity: 0; transition: opacity 0.95s cubic-bezier(0.19,1,0.22,1),
+                                transform 0.95s cubic-bezier(0.19,1,0.22,1);
+    }
+    .reveal   { transform: translateY(40px); }
+    .reveal-l { transform: translateX(-60px); }
+    .reveal-r { transform: translateX(60px); }
+    .reveal.in-view, .reveal-l.in-view, .reveal-r.in-view {
+        opacity: 1; transform: none;
+    }
+    .d1{transition-delay:0.1s!important}.d2{transition-delay:0.2s!important}
+    .d3{transition-delay:0.3s!important}.d4{transition-delay:0.4s!important}
+    .d5{transition-delay:0.5s!important}
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg-alt); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 1100px) {
+        .about-inner { grid-template-columns: 1fr; gap: 60px; }
+        .brands-grid { flex-wrap: wrap; height: auto; }
+        .brand-card { flex: 1 1 45%; height: 350px; }
+        .brand-card:hover { flex: 1.5 1 50%; }
+        .footer-grid { grid-template-columns: 1fr 1fr; }
+        #experience { grid-template-columns: 1fr; }
+        .exp-img-side { height: 50vh; }
+    }
+    @media(max-width: 768px) {
+        #navbar, #navbar.scrolled { padding: 18px 28px; }
+        .nav-links { display: none; }
+        .hero-content { padding: 0 28px 80px; text-align: center; }
+        .hero-eyebrow { justify-content: center; }
+        .hero-h1 { font-size: clamp(48px, 15vw, 72px); }
+        .hero-sub { margin-left: auto; margin-right: auto; max-width: 100%; font-size: 12px; line-height: 1.6; }
+        .hero-actions { flex-direction: column; gap: 16px; align-items: stretch; width: 100%; }
+        .btn-hero, .btn-ghost { text-align: center; justify-content: center; padding: 16px 24px; font-size: 11px; }
+        .hero-stats { display: none; }
+        .hero-scroll { display: none; }
+        #about, #brands, .exp-text-side { padding: 80px 28px; }
+        .about-inner { grid-template-columns: 1fr; }
+        .brands-grid { flex-direction: column; }
+        .brand-card { flex: none; width: 100%; height: 350px; }
+        .brand-card:hover { flex: none; height: 420px; }
+        .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+        .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    }
+    </style>
+</head>
+<body>
+
+<!-- AMBIENT DOTS CANVAS -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ===== PRELOADER ===== -->
+<div id="preloader">
+    <div class="pre-logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</div>
+    <div class="pre-bar-wrap"><div class="pre-bar"></div></div>
+    <div class="pre-pct" id="pre-pct">000</div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar" class="hero-nav">
+    <a href="/" class="nav-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+    <div class="nav-links">
+        <a href="/" class="active">Home</a>
+        <a href="/about">About</a>
+        <a href="/discover">Brands</a>
+        <a href="/models">Cars</a>
+    </div>
+    <div class="nav-toggle" id="navToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+    <div class="hero-video-bg">
+        <video autoplay muted loop playsinline fetchpriority="high" poster="hero-bg.png">
+            <source src="home-bg.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+        <div class="hero-eyebrow" id="hero-eyebrow">
+            <span class="eyebrow-line"></span>
+            APEX AUTOMOTIVE COLLECTIVE
+        </div>
+        <h1 class="hero-h1" id="hero-h1">
+            PURE<br>
+            <span class="red">VELOCITY</span>
+        </h1>
+        <p class="hero-sub" id="hero-sub">
+            Experience the architects of hyper-automotive destiny. We source only the apex tier.
+        </p>
+        <div class="hero-actions" id="hero-actions">
+            <a href="/models" class="btn-hero">
+                Explore Fleet <i data-lucide="arrow-right"></i>
+            </a>
+            <a href="#about" class="btn-ghost">
+                Our Story <i data-lucide="chevron-down"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- scroll hint -->
+    <div class="hero-scroll" id="hero-scroll">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+    </div>
+
+    <!-- stats strip (white glass) -->
+    <div class="hero-stats">
+        <div class="h-stat">
+            <div class="h-stat-num">10<span>+</span></div>
+            <div class="h-stat-label">Global Marques</div>
+        </div>
+        <div class="h-stat">
+            <div class="h-stat-num">500<span>+</span></div>
+            <div class="h-stat-label">Cars Secured</div>
+        </div>
+        <div class="h-stat">
+            <div class="h-stat-num">400<span>+</span></div>
+            <div class="h-stat-label">KM/H Standard</div>
+        </div>
+    </div>
+
+    <!-- ===== MARQUEE ===== -->
+    <div class="marquee-section">
+        <div class="marquee-track" id="mqTrack">
+            <span class="mq-item">LAMBORGHINI <span class="mq-dot"></span></span>
+            <span class="mq-item">BUGATTI <span class="mq-dot"></span></span>
+            <span class="mq-item">MCLAREN <span class="mq-dot"></span></span>
+            <span class="mq-item">PAGANI <span class="mq-dot"></span></span>
+            <span class="mq-item">KOENIGSEGG <span class="mq-dot"></span></span>
+            <span class="mq-item">ASTON MARTIN <span class="mq-dot"></span></span>
+            <!-- duplicate for seamless loop -->
+            <span class="mq-item">LAMBORGHINI <span class="mq-dot"></span></span>
+            <span class="mq-item">BUGATTI <span class="mq-dot"></span></span>
+            <span class="mq-item">MCLAREN <span class="mq-dot"></span></span>
+            <span class="mq-item">PAGANI <span class="mq-dot"></span></span>
+            <span class="mq-item">KOENIGSEGG <span class="mq-dot"></span></span>
+            <span class="mq-item">ASTON MARTIN <span class="mq-dot"></span></span>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+    <div class="about-video-bg">
+        <video autoplay muted loop playsinline preload="metadata" loading="lazy">
+            <source src="about-bg.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="about-light-overlay"></div>
+    <div class="about-inner">
+        <div class="about-text-container">
+            <div class="highlight-box" style="display:inline-block; padding:20px; margin:-20px 0 30px -20px; transition: all 0.4s ease;">
+                <div class="section-eyebrow reveal">
+                    <span class="eyebrow-line"></span> Our Heritage
+                </div>
+                <h2 class="about-title reveal d1" style="margin-bottom: 0;">LEGACY<br>VAULT</h2>
+            </div>
+            <p class="about-body reveal d2">
+                SMK CAR is not a dealership. We are the <strong>architects of your hyper-automotive destiny</strong>. Founded on the principle of unyielding excellence, we source, verify, and curate the most exclusive high-performance machines on the planet.
+            </p>
+            <p class="about-body reveal d3" style="font-size:13px; margin-bottom:0;">
+                Since our inception, SMK Car Auto Group has been the bridge between automotive masterpieces — from the V12 titans of Maranello to the quad-turbocharged engineering miracles from Molsheim.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== BRANDS ===== -->
+<section id="brands">
+    <div class="section-hdr">
+        <div class="section-title-xl reveal text-3d-hover">
+            <small>Our Collection</small>
+            HYPER<br>BRANDS
+        </div>
+    </div>
+    <div class="brands-grid" id="brand-grid-container"></div>
+</section>
+
+<!-- ===== CTA SPLIT ===== -->
+<section id="experience">
+    <div class="exp-img-side reveal-l" style="background: #000; overflow: hidden;">
+        <model-viewer 
+            src="Chevrolet Corvette C8 (3).glb" 
+            auto-rotate 
+            rotation="0deg 90deg 0deg"
+            camera-controls 
+            touch-action="pan-y"
+            shadow-intensity="2" 
+            environment-image="neutral" 
+            exposure="1.2"
+            auto-rotate-delay="0"
+            interaction-prompt="none"
+            camera-orbit="45deg 75deg 105%"
+            min-camera-orbit="auto auto 80%"
+            max-camera-orbit="auto auto 150%"
+            style="width: 100%; height: 100%; background: #000;"
+            alt="Chevrolet Corvette C8 3D Model"
+            loading="lazy"
+            reveal="manual"
+        >
+        </model-viewer>
+        <div class="exp-img-overlay" style="pointer-events: none;"></div>
+    </div>
+    <div class="exp-text-side">
+        <div class="section-eyebrow reveal" style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.5);">
+            <span class="eyebrow-line" style="background: var(--accent);"></span> Fleet Access
+        </div>
+        <h1 id="typing-heading" class="exp-heading"></h1>
+        <p class="exp-desc reveal d3">
+            Discover our complete portfolio of elite high-performance machines, from hybrid legends to pure combustion icons.
+        </p>
+        <div class="reveal d4">
+            <a href="/models" class="btn-cta">
+                DISCOVER MORE <i data-lucide="arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand-side">
+            <a href="/" class="footer-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+            <p class="footer-tagline">The architects of your hyper-automotive destiny. Sourcing, verifying, and curating the most exclusive high-performance machines on the planet.</p>
+        </div>
+        <div class="footer-col">
+            <h5>Navigate</h5>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/discover">Brands</a></li>
+                <li><a href="/models">Models</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h5>Collection</h5>
+            <ul>
+                <li><a href="/revuelto">Lamborghini</a></li>
+                <li><a href="/bugatti">Bugatti</a></li>
+                <li><a href="/mclaren">McLaren</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h5>Quick Links</h5>
+            <ul>
+                <li><a href="/privacy">Privacy Policy</a></li>
+                <li><a href="/terms">Terms of Service</a></li>
+                <li><a href="/contact">Contact Us</a></li>
+                <li><a href="/disclaimer">Disclaimer</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="footer-copy">© 2026 SMK CAR AUTO GROUP. ALL RIGHTS RESERVED.</div>
+        <div class="footer-nav">
+            <a href="https://www.instagram.com/accounts/login/" target="_blank" aria-label="Instagram login"><i data-lucide="instagram"></i></a>
+            <a href="https://www.facebook.com/login/" target="_blank" aria-label="Facebook login"><i data-lucide="facebook"></i></a>
+            <a href="https://twitter.com/i/flow/login" target="_blank" aria-label="Twitter login"><i data-lucide="twitter"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script src="carsData.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* ---- PRELOADER ---- */
+    let pct = 0;
+    const pctEl = document.getElementById('pre-pct');
+    const iv = setInterval(() => {
+        pct = Math.min(pct + Math.random() * 25, 100);
+        pctEl.textContent = String(Math.floor(pct)).padStart(3, '0');
+        if (pct >= 100) clearInterval(iv);
+    }, 30);
+    setTimeout(() => {
+        const pre = document.getElementById('preloader');
+        pre.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        pre.style.opacity = '0';
+        pre.style.transform = 'translateY(-20px)';
+        setTimeout(() => pre.style.display = 'none', 250);
+    }, 200);
+
+    /* ---- PARTICLE CANVAS (light dots) ---- */
+    const cvs = document.getElementById('particle-canvas');
+    const ctx = cvs.getContext('2d');
+    const resize = () => { cvs.width = innerWidth; cvs.height = innerHeight; };
+    resize();
+    window.addEventListener('resize', resize);
+    const pts = Array.from({length: 55}, () => ({
+        x: Math.random() * cvs.width, y: Math.random() * cvs.height,
+        r: Math.random() * 1.3 + 0.3,
+        dx: (Math.random() - 0.5) * 0.25,
+        dy: (Math.random() - 0.5) * 0.25,
+        a: Math.random() * 0.35 + 0.05
+    }));
+    let isActive = true;
+    document.addEventListener('visibilitychange', () => {
+        isActive = !document.hidden;
+        if (isActive) requestAnimationFrame(draw);
+    });
+
+    function draw() {
+        if (!isActive) return;
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        pts.forEach(p => {
+            p.x += p.dx; p.y += p.dy;
+            if (p.x < 0) p.x = cvs.width;
+            if (p.x > cvs.width) p.x = 0;
+            if (p.y < 0) p.y = cvs.height;
+            if (p.y > cvs.height) p.y = 0;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(215,25,32,${p.a})`;
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+
+    /* Reveal model-viewer when in view */
+    const mv = document.querySelector('model-viewer');
+    const mvObs = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { 
+            mv.dismissPoster(); 
+            mvObs.unobserve(mv); 
+        }
+    }, { threshold: 0.1 });
+    mvObs.observe(mv);
+
+    /* ---- NAVBAR ---- */
+    const nav = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    window.addEventListener('scroll', () => {
+        const s = window.scrollY > 80;
+        nav.classList.toggle('scrolled', s);
+    });
+
+    navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    });
+
+    // Close menu when clicking links
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+        });
+    });
+
+    /* ---- HERO GSAP ENTRANCE ---- */
+    gsap.registerPlugin(ScrollTrigger);
+    const tl = gsap.timeline({ delay: 0.6 });
+    tl.to('#hero-eyebrow', { opacity:1, y:0, duration:0.8, ease:'power3.out' })
+      .to('#hero-h1',      { opacity:1, y:0, duration:1.0, ease:'power4.out' }, '-=0.4')
+      .to('#hero-sub',     { opacity:1, y:0, duration:0.8, ease:'power3.out' }, '-=0.4')
+      .to('#hero-actions', { opacity:1, y:0, duration:0.8, ease:'power3.out' }, '-=0.3')
+      .to('#hero-scroll',  { opacity:1, duration:0.6 }, '-=0.2');
+
+    /* ---- SCROLL REVEAL ---- */
+    const revEls = document.querySelectorAll('.reveal, .reveal-l, .reveal-r');
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); }
+        });
+    }, { threshold: 0.12 });
+    revEls.forEach(el => obs.observe(el));
+
+    /* ---- BRAND CARDS ---- */
+    const container = document.getElementById('brand-grid-container');
+    const brands = window.db ? db.getBrands() : [];
+    const fallback = [
+        { name:'Lamborghini', href:'revuelto.html', found:'1963', country:'Italy',
+          image:'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&q=80&w=900' },
+        { name:'Bugatti', href:'bugatti.html', found:'1909', country:'France',
+          image:'https://images.unsplash.com/photo-1566024146764-03d55eebd1e7?auto=format&fit=crop&q=80&w=900' },
+        { name:'McLaren', href:'mclaren.html', found:'1963', country:'UK',
+          image:'https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&q=80&w=900' }
+    ];
+    const brandLinkMap = {
+        'lamborghini': 'revuelto.html',
+        'bugatti': 'bugatti.html',
+        'mclaren': 'mclaren.html',
+        'aston-martin': 'aston-martin.html',
+        'koenigsegg': 'koenigsegg.html',
+        'pagani': 'pagani.html'
+    };
+    const list = brands.length
+        ? brands.slice(0,6).map(b => ({ 
+            name:b.name, 
+            href: brandLinkMap[b.id] || `details.html?id=${b.id}`, 
+            found:b.found, 
+            country:b.country, 
+            image:b.image 
+        }))
+        : fallback;
+
+    list.forEach(b => {
+        const a = document.createElement('a');
+        a.href = b.href;
+        a.className = 'brand-card';
+        a.innerHTML = `
+            <img src="${b.image}" alt="${b.name}">
+            <div class="brand-card-body">
+                <div class="brand-tag">${b.found || ''} · ${b.country || ''}</div>
+                <span class="brand-name">${b.name}</span>
+                <div class="brand-discover">Discover <i data-lucide="arrow-right" style="width:11px;height:11px;"></i></div>
+            </div>`;
+        container.appendChild(a);
+    });
+
+    /* ---- TYPING EFFECT ---- */
+    const typEl = document.getElementById('typing-heading');
+    const text  = "EXPLORE\nTHE\nFULL RANGE";
+    let ci = 0;
+    const typeIt = () => {
+        if (ci < text.length) {
+            typEl.innerHTML += text[ci] === '\n' ? '<br>' : text[ci];
+            ci++;
+            setTimeout(typeIt, 38);
+        }
+    };
+    const typeObs = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { setTimeout(typeIt, 350); typeObs.disconnect(); }
+    }, { threshold: 0.3 });
+    typeObs.observe(document.getElementById('experience'));
+
+    /* ---- MOUSE TRACKING PARALLAX (Advanced) ---- */
+    const expSide = document.querySelector('.exp-img-side');
+    const expImg  = expSide.querySelector('img');
+    
+    expSide.addEventListener('mousemove', (e) => {
+        const { width, height, left, top } = expSide.getBoundingClientRect();
+        const x = (e.clientX - left) / width;
+        const y = (e.clientY - top) / height;
+        
+        // Subtle offset based on mouse position
+        const moveX = (x - 0.5) * 30; // 30px max move
+        const moveY = (y - 0.5) * 30;
+        
+        gsap.to(expImg, {
+            x: moveX,
+            y: moveY,
+            scale: 1.15, // Keep scale during move
+            duration: 0.8,
+            ease: "power2.out"
+        });
+    });
+    
+    expSide.addEventListener('mouseleave', () => {
+        gsap.to(expImg, {
+            x: 0,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: "power3.inOut"
+        });
+    });
+
+    /* ---- LUCIDE ICONS ---- */
+    try { lucide.createIcons(); } catch(e) {}
+    setTimeout(() => { try { lucide.createIcons(); } catch(e) {} }, 400);
+
+});
+</script>
+<script src="cinematic.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMK CAR | URUS SE EXPERIENCE (Ferrari DNA)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    <style>
+        :root {
+            --accent: #E1FB4D; /* Urus SE Electric Lime accent */
+            --bg: #000;
+            --text: #fff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .cursor-dot { width: 8px; height: 8px; background: #FFF; border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; mix-blend-mode: difference; }
+        .cursor-ring { width: 35px; height: 35px; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; }
+
+        #experience-wrap { position: relative; width: 100%; height: 700vh; }
+        
+        section {
+            height: 100vh; width: 100%; position: fixed; top: 0; left: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden; visibility: hidden; pointer-events: none;
+            clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+        }
+        section.active { visibility: visible; pointer-events: auto; }
+
+        .section-bg { position: absolute; inset: -5%; z-index: 1; will-change: transform, scale; }
+        .section-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65); }
+        .section-overlay { position: absolute; inset: 0; z-index: 3; background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%); }
+        .section-content { position: relative; z-index: 4; text-align: left; width: 100%; max-width: 1400px; padding: 0 80px; }
+
+        .sec-label { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: 0.3em; margin-bottom: 20px; display: block; text-transform: uppercase; }
+        .sec-title { font-size: clamp(60px, 10vw, 150px); font-weight: 900; line-height: 0.85; text-transform: uppercase; margin-bottom: 35px; letter-spacing: -0.04em; }
+        .sec-desc { font-size: 14px; color: #999; line-height: 1.8; max-width: 480px; margin-bottom: 50px; }
+        
+        .char { display: inline-block; transform: translateY(110%); opacity: 0; }
+        .word-wrapper { display: inline-block; overflow: hidden; vertical-align: top; }
+
+        .btn-discover {
+            padding: 18px 48px; border: 1.5px solid rgba(255,255,255,0.3); color: #FFF;
+            text-transform: uppercase; font-size: 13px; font-weight: 900; letter-spacing: 0.3em;
+            cursor: pointer; transition: 0.5s cubic-bezier(0.19,1,0.22,1); background: transparent;
+            border-radius: 50px; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .btn-discover:hover { 
+            background: var(--accent); color: #000; 
+            box-shadow: 0 15px 35px rgba(225,251,77,0.4); 
+            transform: translateY(-5px) scale(1.05);
+            border-color: var(--accent);
+        }
+
+        .bottom-hud {
+            position: fixed; left: 80px; bottom: 80px; z-index: 1000;
+            display: flex; align-items: flex-end; gap: 40px;
+        }
+        .hud-idx { font-size: 20px; font-weight: 900; }
+        .hud-idx span { font-size: 11px; color: #555; margin-left: 5px; }
+        .hud-line-wrap { width: 1px; height: 80px; background: rgba(255,255,255,0.1); position: relative; }
+        .hud-line-fill { position: absolute; top: 0; left: 0; width: 100%; height: 0%; background: var(--accent); transition: 0.3s; }
+        .hud-name { font-size: 10px; font-weight: 800; letter-spacing: 0.3em; color: #444; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .stat-item { border-left: 1px solid rgba(255,255,255,0.1); padding-left: 25px; }
+        .stat-v { font-size: 50px; font-weight: 900; }
+        .stat-l { font-size: 9px; font-weight: 800; color: #666; letter-spacing: 0.2em; text-transform: uppercase; margin-top: 10px; }
+
+        /* --- TEXT HOVER HIGHLIGHTS --- */
+        h1, h2, p, span, .sec-label, .sec-title, .stat-v, .btn-discover {
+            transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        }
+        h1:hover, h2:hover, .sec-title:hover {
+            color: #fff !important;
+            text-shadow: 0 0 20px #E1FB4D, 0 0 40px rgba(225,251,77,0.6);
+            transform: translateY(-2px);
+        }
+        p:hover, span:hover, .sec-label:hover, .stat-v:hover {
+            color: #fff !important;
+            text-shadow: 0 0 15px rgba(225,251,77,0.4);
+            transform: scale(1.02);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
+    <div class="bottom-hud">
+        <div class="hud-line-wrap"><div class="hud-line-fill" id="hud-fill"></div></div>
+        <div class="hud-idx"><span id="curr-idx">01</span><span>/ 07</span></div>
+        <div class="hud-name" id="curr-name">Hero Experience</div>
+    </div>
+
+    <div id="experience-wrap">
+        
+        <!-- SECTION 1: HERO -->
+        <section class="scene active" data-name="The Reveal" style="visibility: visible; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);">
+            <div class="section-bg">
+                <img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/urus-se/restyle/urus_se_header.jpg">
+            </div>
+            <div class="section-overlay"></div>
+            <div class="section-content">
+                <span class="sec-label">SMK Car Marque Experience</span>
+                <h1 class="sec-title">URUS SE</h1>
+                <p class="sec-desc">The most powerful Super SUV. A plug-in hybrid version that redefines the concept of versatility.</p>
+                <button class="btn-discover">Discover Experience</button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: DYNAMICS -->
+        <section class="scene" data-name="Dynamics">
+            <div class="section-overlay" style="background: #000;"></div>
+            <div class="section-content">
+                <span class="sec-label">1 - VEHICLE DYNAMICS</span>
+                <h2 class="sec-title">DARE TO LIVE<br>MORE</h2>
+                <div class="stats-grid">
+                    <div class="stat-item"><div class="stat-v" data-v="60">0</div><div class="stat-l">Electric Range (KM)</div></div>
+                    <div class="stat-item"><div class="stat-v" data-v="800">0</div><div class="stat-l">Total HP</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: PERFORMANCE -->
+        <section class="scene" data-name="Performance">
+            <div class="section-bg"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/urus-se/restyle/urus_se_front_v2.png"></div>
+            <div class="section-overlay"></div>
+            <div class="section-content">
+                <span class="sec-label">2 - PERFORMANCE</span>
+                <h2 class="sec-title">VERSATILITY<br>REIMAGINED</h2>
+                <div class="stats-grid">
+                    <div class="stat-item"><div class="stat-v" data-v="312">0</div><div class="stat-l">Top Velocity</div></div>
+                    <div class="stat-item"><div class="stat-v" data-v="3.4">0</div><div class="stat-l">0-100 KM/H</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: ENGINE -->
+        <section class="scene" data-name="Powertrain">
+            <div class="section-bg"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/urus-se/restyle/urus_se_rear_v2.png"></div>
+            <div class="section-overlay"></div>
+            <div class="section-content">
+                <span class="sec-label">3 - ENGINE</span>
+                <h2 class="sec-title">HYBRID<br>HEART</h2>
+                <p class="sec-desc">A twin-turbo V8 engine combined with an electric motor for unprecedented torque delivery.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: DESIGN -->
+        <section class="scene" data-name="Design">
+            <div class="section-bg"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/urus-se/restyle/urus_se_interior_v2.jpg"></div>
+            <div class="section-overlay"></div>
+            <div class="section-content">
+                <span class="sec-label">4 - DESIGN</span>
+                <h2 class="sec-title">ELITE<br>AERODYNAMICS</h2>
+            </div>
+        </section>
+
+        <!-- SECTION 6-7: REPLICATED SLOTS -->
+        <section class="scene" data-name="Cockpit">
+            <div class="section-overlay" style="background: #000;"></div>
+            <div class="section-content">
+                <span class="sec-label">5 - INTERIOR</span>
+                <h2 class="sec-title">HUMAN-CENTRIC<br>DISPLAY</h2>
+            </div>
+        </section>
+
+        <section class="scene" data-name="Specifications">
+            <div class="section-bg"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/urus-se/restyle/urus_se_header.jpg"></div>
+            <div class="section-overlay"></div>
+            <div class="section-content">
+                <span class="sec-label">Technical Dossier</span>
+                <h2 class="sec-title">SPECIFICATIONS</h2>
+                <button class="btn-discover">View Data</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        document.querySelectorAll('.sec-title').forEach(el => {
+            el.innerHTML = el.innerText.split('').map(c => `<span class="word-wrapper"><span class="char">${c === ' ' ? '&nbsp;' : c}</span></span>`).join('');
+        });
+
+        const scenes = gsap.utils.toArray('.scene');
+        const mainTimeline = gsap.timeline({
+            scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 }
+        });
+
+        scenes.forEach((scene, i) => {
+            if (i > 0) {
+                mainTimeline.to(scene, {
+                    clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+                    onStart: () => scene.classList.add('active'),
+                    onReverseComplete: () => scene.classList.remove('active')
+                }, i);
+
+                mainTimeline.from(scene.querySelectorAll('.char'), { y: "110%", opacity: 0, stagger: 0.02, duration: 0.5 }, i + 0.3);
+                mainTimeline.from(scene.querySelector('.sec-label'), { opacity: 0, y: 15, duration: 0.4 }, i + 0.6);
+                
+                scene.querySelectorAll('.stat-v').forEach(st => {
+                    const tv = parseFloat(st.getAttribute('data-v'));
+                    mainTimeline.to(st, { innerText: tv, duration: 1, snap: { innerText: st.innerText.includes('.') ? 0.1 : 1 } }, i + 0.5);
+                });
+            } else {
+                gsap.to(scene.querySelectorAll('.char'), { y: 0, opacity: 1, stagger: 0.04, duration: 1, delay: 0.5 });
+                gsap.to(scene.querySelector('.sec-label'), { opacity: 1, y: 0, duration: 1, delay: 0.8 });
+            }
+
+            mainTimeline.to(scene.querySelector('.section-bg'), { scale: 1.1, duration: 1, ease: "none" }, i);
+
+            mainTimeline.call(() => {
+                document.getElementById('curr-idx').innerText = (i + 1).toString().padStart(2, '0');
+                document.getElementById('curr-name').innerText = scene.getAttribute('data-name');
+                document.getElementById('hud-fill').style.height = `${((i + 1) / scenes.length) * 100}%`;
+            }, null, i + 0.2);
+        });
+
+        const dot = document.querySelector('.cursor-dot');
+        const ring = document.querySelector('.cursor-ring');
+        window.addEventListener('mousemove', e => {
+            gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.1 });
+            gsap.to(ring, { x: e.clientX - 17, y: e.clientY - 17, duration: 0.4 });
+        });
+    </script>
+</body>
+</html>

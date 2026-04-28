@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Models | SMK CAR Automotive</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Explore the full SMK CAR automotive range — hypercars, super sports, luxury SUVs and electrified icons.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --gold: #D71920;
+            --gold-dim: #a01218;
+            --bg: #050505;
+            --bg2: #0a0a0a;
+            --bg3: #111111;
+            --surface: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.08);
+            --text: #FFFFFF;
+            --text-dim: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.4);
+            --header-h: 72px;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ── CUSTOM CURSOR ── */
+        #cursor-dot {
+            width: 8px; height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: transform 0.1s, background 0.3s;
+        }
+        #cursor-ring {
+            width: 36px; height: 36px;
+            border: 1.5px solid rgba(215,25,32,0.4);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: width 0.3s, height 0.3s, border-color 0.3s;
+        }
+        body:hover #cursor-ring { border-color: rgba(215,25,32,0.7); }
+        a:hover ~ #cursor-ring, button:hover ~ #cursor-ring {
+            width: 56px; height: 56px;
+        }
+
+        /* ── HEADER ── */
+        .z-header {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: var(--header-h);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 50px;
+            z-index: 1000;
+            transition: background 0.5s, backdrop-filter 0.5s;
+        }
+        .z-header.scrolled {
+            background: rgba(5,5,5,0.85);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 40px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--border);
+        }
+        .z-logo {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 22px; font-weight: 900;
+            letter-spacing: 0.4em; color: var(--text);
+            text-decoration: none;
+        }
+        .z-logo span { color: var(--gold); }
+        .z-nav { display: flex; align-items: center; gap: 36px; }
+        .z-nav a {
+            font-size: 11px; font-weight: 600;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--text-dim); text-decoration: none;
+            transition: color 0.3s; position: relative;
+        }
+        .z-nav a::after {
+            content: ''; position: absolute;
+            bottom: -4px; left: 0; right: 0; height: 1px;
+            background: var(--gold); transform: scaleX(0);
+            transition: transform 0.3s; transform-origin: left;
+        }
+        .z-nav a:hover, .z-nav a.active { color: var(--text); }
+        .z-nav a:hover::after, .z-nav a.active::after { transform: scaleX(1); }
+
+        /* --- TEXT HOVER HIGHLIGHTS --- */
+        h1, h2, h3, p, span, .z-logo, .z-nav a, .model-info h3, .model-badge {
+            transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        }
+        h1:hover, h2:hover, h3:hover, .z-logo:hover, .model-info h3:hover {
+            color: var(--gold) !important;
+            text-shadow: 0 0 15px rgba(215,25,32,0.3);
+            transform: translateY(-1px);
+        }
+        .z-nav a:hover, .model-badge:hover {
+            text-shadow: 0 0 10px rgba(215,25,32,0.2);
+        }
+        .z-nav-actions { display: flex; align-items: center; gap: 20px; }
+        .z-icon-btn {
+            width: 40px; height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 50%; background: var(--surface);
+            display: flex; align-items: center; justify-content: center;
+            cursor: none; transition: all 0.3s; color: var(--text-dim);
+            text-decoration: none;
+        }
+        .z-icon-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.08); }
+        .z-icon-btn svg { width: 16px; height: 16px; stroke: currentColor; }
+
+        /* ── HERO ── */
+        .models-hero {
+            margin-top: var(--header-h);
+            height: 70vh; min-height: 520px;
+            position: relative; overflow: hidden;
+            display: flex; align-items: flex-end;
+        }
+        .models-hero-bg {
+            position: absolute; inset: 0;
+            background:
+                url('assets/drift-bg.png') center/cover no-repeat;
+        }
+        .models-hero-bg::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.15) 0%,
+                rgba(0,0,0,0.35) 50%,
+                rgba(0,0,0,0.65) 100%
+            );
+        }
+        .models-hero-content {
+            position: relative; z-index: 2;
+            padding: 0 70px 70px;
+            max-width: 900px;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 12px;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.4em; text-transform: uppercase;
+            color: var(--gold); margin-bottom: 20px;
+        }
+        .hero-eyebrow::before {
+            content: ''; display: block;
+            width: 30px; height: 1px; background: var(--gold);
+        }
+        .models-hero h1 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 900; line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+        }
+        .models-hero h1 em {
+            font-style: italic; color: var(--gold);
+        }
+        .hero-sub {
+            margin-top: 24px;
+            font-size: 14px; color: var(--text-dim);
+            line-height: 1.8; max-width: 480px;
+        }
+        /* animated scan line */
+        .hero-scanline {
+            position: absolute;
+            left: 0; right: 0; height: 1px;
+            background: linear-gradient(to right, transparent, rgba(215,25,32,0.6), transparent);
+            opacity: 0.4;
+            animation: scanMove 6s linear infinite;
+        }
+        @keyframes scanMove {
+            0% { top: 0; } 100% { top: 100%; }
+        }
+        /* corner HUD marks */
+        .hud-corner {
+            position: absolute; width: 24px; height: 24px;
+            opacity: 0.4;
+        }
+        .hud-corner.tl { top: 90px; left: 20px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+        .hud-corner.tr { top: 90px; right: 20px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+        .hud-corner.bl { bottom: 20px; left: 20px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+        .hud-corner.br { bottom: 20px; right: 20px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+
+        /* hero stats row */
+        .hero-stats {
+            position: absolute; right: 70px; bottom: 70px;
+            display: flex; gap: 0; z-index: 2;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        .h-stat {
+            padding: 16px 28px;
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+        .h-stat:first-child { border-left: none; }
+        .h-stat-val {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 32px; font-weight: 900; color: var(--gold);
+            line-height: 1;
+        }
+        .h-stat-label {
+            font-size: 9px; font-weight: 700; letter-spacing: 0.25em;
+            text-transform: uppercase; color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+        }
+
+        /* ── FILTER / CONTROL BAR ── */
+        .control-bar {
+            position: sticky; top: var(--header-h); z-index: 900;
+            background: rgba(5,5,5,0.85);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 50px;
+        }
+        .filter-pills {
+            display: flex; align-items: center; gap: 4px;
+            padding: 14px 0;
+        }
+        .fpill {
+            font-size: 12px; font-weight: 800; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--text-dim);
+            padding: 12px 28px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .fpill:hover { 
+            color: var(--text); 
+            border-color: var(--gold); 
+            background: rgba(255,255,255,0.05); 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+        .fpill.active {
+            color: #fff; background: var(--gold);
+            border-color: var(--gold);
+            box-shadow: 0 10px 25px rgba(215,25,32,0.25);
+        }
+        .control-right { display: flex; align-items: center; gap: 16px; }
+        .view-toggle { display: flex; align-items: center; gap: 6px; }
+        .vbtn {
+            width: 34px; height: 34px;
+            border: 1px solid var(--border); border-radius: 8px;
+            background: transparent; cursor: none;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-dim); transition: all 0.3s;
+        }
+        .vbtn.active, .vbtn:hover { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.1); }
+        .vbtn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; }
+        .count-badge {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+            color: var(--text-muted); text-transform: uppercase;
+        }
+        .count-badge span { color: var(--gold); font-family: 'Barlow Condensed', sans-serif; font-size: 18px; }
+
+        /* ── SEARCH BAR ── */
+        .search-wrap {
+            position: relative;
+        }
+        .search-wrap input {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 16px 8px 38px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px; font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--text);
+            outline: none; width: 200px;
+            transition: all 0.3s;
+        }
+        .search-wrap input::placeholder { color: var(--text-muted); }
+        .search-wrap input:focus { border-color: var(--gold); width: 280px; background: rgba(215,25,32,0.03); }
+        .search-wrap svg {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            width: 14px; height: 14px; stroke: var(--text-muted);
+        }
+
+        /* ── MODELS GRID — CARD VIEW ── */
+        #models-grid {
+            padding: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            background: var(--bg);
+            min-height: 60vh;
+        }
+
+        .mcard {
+            position: relative; border-radius: 16px;
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            transition: transform 0.5s cubic-bezier(0.19,1,0.22,1),
+                        border-color 0.4s, box-shadow 0.4s;
+            cursor: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        .mcard:hover {
+            transform: translateY(-10px) scale(1.015);
+            border-color: rgba(215,25,32,0.4);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(215,25,32,0.1);
+        }
+
+        /* card image */
+        .mcard-visual {
+            height: 240px; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+        }
+        .mcard-visual img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.19,1,0.22,1), filter 0.4s;
+            filter: brightness(0.9);
+        }
+        .mcard:hover .mcard-visual img {
+            transform: scale(1.08);
+            filter: brightness(1);
+        }
+        .mcard-visual-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.15) 55%, transparent 100%);
+        }
+        .mcard-badge {
+            position: absolute; top: 16px; left: 16px;
+            font-size: 9px; font-weight: 800; letter-spacing: 0.25em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            background: var(--gold); color: #fff;
+            border-radius: 4px;
+        }
+        .mcard-cat-tag {
+            position: absolute; top: 16px; right: 16px;
+            font-size: 9px; font-weight: 700; letter-spacing: 0.2em;
+            text-transform: uppercase; color: rgba(255,255,255,0.85);
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
+            padding: 4px 10px; border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        /* background ghost text */
+        .mcard-ghost {
+            position: absolute; bottom: 8px; right: 12px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: clamp(50px, 8vw, 80px);
+            font-weight: 900; text-transform: uppercase;
+            color: rgba(0,0,0,0.04); line-height: 1;
+            pointer-events: none; user-select: none;
+            transition: transform 0.6s;
+        }
+        .mcard:hover .mcard-ghost { transform: translateX(8px); }
+
+        /* card body */
+        .mcard-body { padding: 24px 28px 28px; }
+        .mcard-brand {
+            font-size: 9px; font-weight: 800; letter-spacing: 0.35em;
+            text-transform: uppercase; color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .mcard-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 36px; font-weight: 900;
+            text-transform: uppercase; line-height: 1;
+            color: var(--text);
+        }
+        .mcard-engine {
+            font-size: 11px; color: var(--text-muted);
+            letter-spacing: 0.15em; margin-top: 6px;
+        }
+
+        /* stats strip */
+        .mcard-stats {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 0; margin: 20px 0;
+            border: 1px solid var(--border); border-radius: 10px;
+            overflow: hidden;
+        }
+        .ms {
+            padding: 14px 12px; text-align: center;
+            border-right: 1px solid var(--border);
+            background: var(--bg2);
+        }
+        .ms:last-child { border-right: none; }
+        .ms-val {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 22px; font-weight: 900; line-height: 1;
+            color: var(--text);
+        }
+        .ms-unit { font-size: 10px; color: var(--text-muted); }
+        .ms-lbl {
+            font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* progress bar for power */
+        .mcard-power-bar {
+            height: 2px; background: var(--border);
+            border-radius: 2px; margin-bottom: 20px; overflow: hidden;
+        }
+        .mcard-power-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--gold-dim), var(--gold));
+            border-radius: 2px;
+            transition: width 1.2s cubic-bezier(0.19,1,0.22,1);
+        }
+
+        /* CTA */
+        .mcard-cta {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .mcard-link {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-size: 10px; font-weight: 800; letter-spacing: 0.25em;
+            text-transform: uppercase; color: var(--gold);
+            text-decoration: none;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(215,25,32,0.25);
+            transition: all 0.3s;
+        }
+        .mcard-link:hover { letter-spacing: 0.35em; border-bottom-color: var(--gold); }
+        .mcard-link svg { width: 14px; height: 14px; stroke: currentColor; transition: transform 0.3s; }
+        .mcard-link:hover svg { transform: translateX(5px); }
+        .mcard-price {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 20px; font-weight: 900;
+            color: var(--text-dim);
+        }
+
+        /* featured card – 2 column span */
+        .mcard.featured {
+            grid-column: span 2;
+        }
+        .mcard.featured .mcard-visual { height: 380px; }
+        .mcard.featured .mcard-name { font-size: 56px; }
+
+        /* ── LIST VIEW ── */
+        #models-grid.list-mode {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        #models-grid.list-mode .mcard {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            border-radius: 12px;
+        }
+        #models-grid.list-mode .mcard.featured {
+            grid-column: span 1;
+        }
+        #models-grid.list-mode .mcard-visual { height: 100%; min-height: 180px; border-radius: 0; }
+        #models-grid.list-mode .mcard.featured .mcard-visual { height: 100%; }
+        #models-grid.list-mode .mcard.featured .mcard-name { font-size: 36px; }
+        #models-grid.list-mode .mcard-ghost { display: none; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            grid-column: 1/-1;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 16px;
+            padding: 120px 40px;
+        }
+        .empty-state svg { width: 60px; height: 60px; stroke: var(--text-muted); }
+        .empty-state h3 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 28px; font-weight: 900; text-transform: uppercase;
+            color: var(--text-dim);
+        }
+        .empty-state p { font-size: 13px; color: var(--text-muted); }
+
+        /* ── MARQUEE BANNER ── */
+        .marquee-wrap {
+            overflow: hidden;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: var(--bg2);
+            padding: 18px 0;
+        }
+        .marquee-track {
+            display: flex; gap: 60px; white-space: nowrap;
+            animation: marqueeMove 25s linear infinite;
+        }
+        .marquee-track span {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 13px; font-weight: 700; letter-spacing: 0.3em;
+            text-transform: uppercase; color: var(--text-muted);
+        }
+        .marquee-track span.accent { color: var(--gold); opacity: 0.6; }
+        @keyframes marqueeMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── CTA BAND ── */
+        .cta-band {
+            position: relative; overflow: hidden;
+            padding: 100px 70px;
+            background: url('configure-bg.png') center/cover no-repeat;
+            border-top: none;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center; gap: 60px;
+        }
+        .cta-band::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 0;
+        }
+        .cta-band > * {
+            position: relative;
+            z-index: 1;
+        }
+        .cta-band::before {
+            content: 'SMK CAR';
+            position: absolute; right: -20px; top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 200px; font-weight: 900;
+            color: rgba(255,255,255,0.06);
+            pointer-events: none; white-space: nowrap;
+            z-index: 1;
+        }
+        .cta-band h2 {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 900; text-transform: uppercase; line-height: 1.05;
+            color: #FFFFFF;
+        }
+        .cta-band h2 span { color: var(--gold); }
+        .cta-band p { margin-top: 14px; font-size: 14px; color: rgba(255,255,255,0.8); max-width: 500px; }
+        .btn-gold {
+            display: inline-flex; align-items: center; gap: 14px;
+            background: var(--gold); color: #fff;
+            font-size: 13px; font-weight: 900; letter-spacing: 0.3em;
+            text-transform: uppercase; padding: 18px 48px;
+            text-decoration: none; border: none; cursor: pointer;
+            white-space: nowrap;
+            border-radius: 50px;
+            transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+            position: relative; z-index: 1;
+            box-shadow: 0 15px 35px rgba(215,25,32,0.2);
+        }
+        .btn-gold:hover { 
+            background: #0A0A0A; 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3); 
+            letter-spacing: 0.4em;
+        }
+        .btn-gold svg { width: 18px; height: 18px; stroke: currentColor; transition: transform 0.3s; }
+        .btn-gold:hover svg { transform: translateX(5px); }
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 14px;
+            background: transparent; color: var(--text);
+            font-size: 12px; font-weight: 800; letter-spacing: 0.25em;
+            text-transform: uppercase; padding: 18px 48px;
+            border: 2px solid var(--border); text-decoration: none; cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+        }
+        .btn-ghost:hover { 
+            border-color: var(--gold); 
+            color: var(--gold); 
+            transform: translateY(-3px) scale(1.02);
+            background: rgba(255,255,255,0.8);
+        }
+
+        /* ── PREMIUM FOOTER ── */
+        .z-footer {
+            background: url('hero-bg.png') center right/cover no-repeat;
+            position: relative;
+            padding: 100px 80px 40px;
+            color: #fff;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+        }
+        .z-footer::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, 
+                rgba(0,0,0,0.95) 0%, 
+                rgba(0,0,0,0.7) 40%, 
+                rgba(0,0,0,0.3) 100%);
+            z-index: 0;
+        }
+        .z-footer > * { position: relative; z-index: 1; }
+
+        .zf-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+        .zf-logo-area .z-logo {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 0.5em;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 24px;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .zf-logo-area .z-logo span { color: var(--gold); }
+        .zf-tagline {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.5);
+            max-width: 380px;
+            letter-spacing: 0.02em;
+        }
+
+        .zf-col h4 {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 30px;
+        }
+        .zf-col ul { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+        .zf-col ul a {
+            text-decoration: none;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            transition: all 0.3s;
+            display: inline-block;
+            letter-spacing: 0.05em;
+        }
+        .zf-col ul a:hover {
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .zf-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .zf-copy {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+        }
+        .zf-social { display: flex; gap: 20px; }
+        .zf-social a {
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .zf-social a:hover { color: var(--gold); }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #fff; border: 1px solid var(--gold);
+            color: #0A0A0A; padding: 14px 24px;
+            border-radius: 8px; font-size: 12px; font-weight: 600;
+            z-index: 9999; transform: translateY(80px); opacity: 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+            pointer-events: none;
+        }
+        #toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ── LOADER ──  */
+        #page-loader {
+            position: fixed; inset: 0;
+            background: #050505; z-index: 99999;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 20px;
+            transition: opacity 0.8s, visibility 0.8s;
+        }
+        #page-loader.hidden { opacity: 0; visibility: hidden; }
+        .loader-logo {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 32px; font-weight: 900; letter-spacing: 0.4em;
+            color: #FFFFFF;
+        }
+        .loader-logo span { color: var(--gold); }
+        .loader-bar-wrap {
+            width: 200px; height: 1px; background: rgba(255,255,255,0.1); overflow: hidden;
+        }
+        .loader-bar {
+            height: 100%; background: var(--gold);
+            animation: loaderFill 1.4s cubic-bezier(0.19,1,0.22,1) forwards;
+        }
+        @keyframes loaderFill { 0%{width:0} 100%{width:100%} }
+        .loader-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.4em;
+            text-transform: uppercase; color: rgba(255,255,255,0.35);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width: 900px) {
+            #models-grid { padding: 24px; grid-template-columns: 1fr; }
+            .mcard.featured { grid-column: span 1; }
+            .mcard.featured .mcard-visual { height: 240px; }
+            .mcard.featured .mcard-name { font-size: 36px; }
+            .control-bar { padding: 0 24px; flex-wrap: wrap; gap: 10px; padding-bottom: 10px; }
+            .models-hero-content { padding: 0 24px 50px; }
+            .cta-band { grid-template-columns: 1fr; padding: 60px 24px; }
+            .zf-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+            #models-grid.list-mode .mcard { grid-template-columns: 1fr; }
+            #models-grid.list-mode .mcard-visual { height: 220px; }
+            .hero-stats { display: none; }
+            .z-header { padding: 0 24px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loader -->
+    <div id="page-loader">
+        <div class="loader-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</div>
+        <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+        <div class="loader-label">Loading Models Registry</div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- Toast -->
+    <div id="toast">✓ Filter applied</div>
+
+    <!-- HEADER -->
+    <header class="z-header" id="z-header">
+        <a href="/" class="z-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#about">About</a>
+            <a href="/discover">Brands</a>
+            <a href="/models" class="active">Cars</a>
+        </nav>
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="models-hero" id="home">
+        <div class="models-hero-bg"></div>
+        <div class="hero-scanline"></div>
+        <div class="hud-corner tl"></div>
+        <div class="hud-corner tr"></div>
+        <div class="hud-corner bl"></div>
+        <div class="hud-corner br"></div>
+        <div class="models-hero-content">
+            <div class="hero-eyebrow">SMK CAR AUTOMOTIVE REGISTRY</div>
+            <h1>THE<br><em>MODELS</em></h1>
+            <p class="hero-sub">Every machine in our registry is a statement engineered to dominate, designed to inspire, and built for those who refuse to compromise.</p>
+        </div>
+        <div class="hero-stats">
+            <div class="h-stat">
+                <div class="h-stat-val" id="stat-total">—</div>
+                <div class="h-stat-label">Models Listed</div>
+            </div>
+            <div class="h-stat">
+                <div class="h-stat-val">10+</div>
+                <div class="h-stat-label">Marques</div>
+            </div>
+            <div class="h-stat">
+                <div class="h-stat-val">400<small style="font-size:16px">km/h</small></div>
+                <div class="h-stat-label">Apex Speed</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-wrap">
+        <div class="marquee-track">
+            <span>LAMBORGHINI</span><span class="accent">✦</span>
+            <span>BUGATTI</span><span class="accent">✦</span>
+            <span>MCLAREN</span><span class="accent">✦</span>
+            <span>ASTON MARTIN</span><span class="accent">✦</span>
+            <span>KOENIGSEGG</span><span class="accent">✦</span>
+            <span>PAGANI</span><span class="accent">✦</span>
+            <span>LAMBORGHINI</span><span class="accent">✦</span>
+            <span>BUGATTI</span><span class="accent">✦</span>
+            <span>MCLAREN</span><span class="accent">✦</span>
+            <span>ASTON MARTIN</span><span class="accent">✦</span>
+            <span>KOENIGSEGG</span><span class="accent">✦</span>
+            <span>PAGANI</span><span class="accent">✦</span>
+        </div>
+    </div>
+
+    <!-- CONTROL BAR -->
+    <div class="control-bar" id="control-bar">
+        <div class="filter-pills" id="filter-pills">
+            <button class="fpill active" data-filter="all">All Models</button>
+            <button class="fpill" data-filter="super-sports">Super Sports</button>
+            <button class="fpill" data-filter="suv">Super SUV</button>
+            <button class="fpill" data-filter="hpev">Electrified</button>
+        </div>
+        <div class="control-right">
+            <div class="count-badge">Showing <span id="count-num">0</span> vehicles</div>
+            <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="search-inp" placeholder="Search models, brands…">
+            </div>
+            <div class="view-toggle">
+                <button class="vbtn active" id="vbtn-grid" title="Grid View">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                </button>
+                <button class="vbtn" id="vbtn-list" title="List View">
+                    <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODELS GRID -->
+    <div id="models-grid"></div>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+        <div>
+            <h2>CONFIGURE<br><span>YOUR MACHINE</span></h2>
+            <p>Step into the world of bespoke automotive excellence. Every SMK CAR vehicle can be tailored to your exact specification — from track-ready performance to urban luxury.</p>
+            <div style="display:flex;gap:16px;margin-top:32px;flex-wrap:wrap;">
+                <a href="/discover" class="btn-gold">
+                    Explore Brands
+                    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+        </div>
+        <div style="text-align:right;opacity:0.12;pointer-events:none;user-select:none;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(80px,10vw,140px);font-weight:900;line-height:1;text-transform:uppercase;color:#FFFFFF;">SMK<br>CAR</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="z-footer">
+        <div class="zf-top">
+            <div class="zf-logo-area">
+                <a class="z-logo logo" href="/"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+                <p class="zf-tagline">The architects of your hyper-automotive destiny. Sourcing, verifying, and curating the most exclusive high-performance machines on the planet.</p>
+            </div>
+            <div class="zf-col">
+                <h4>Navigate</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/discover">Brands</a></li>
+                    <li><a href="/models">Models</a></li>
+                </ul>
+            </div>
+            <div class="zf-col">
+                <h4>Collection</h4>
+                <ul>
+                    <li><a href="/revuelto">Lamborghini</a></li>
+                    <li><a href="/bugatti">Bugatti</a></li>
+                    <li><a href="/mclaren">McLaren</a></li>
+                </ul>
+            </div>
+            <div class="zf-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/disclaimer">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="zf-bottom">
+            <p class="zf-copy">© 2026 SMK CAR AUTO GROUP. ALL RIGHTS RESERVED.</p>
+            <div class="zf-social">
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">YouTube</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="carsData.js"></script>
+    <script>
+    (() => {
+        // ── Cursor ──
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+        const moveCursor = () => {
+            dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+            rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+            requestAnimationFrame(moveCursor);
+        };
+        moveCursor();
+        document.querySelectorAll('a,button,.mcard,.fpill,.vbtn').forEach(el => {
+            el.addEventListener('mouseenter', () => { ring.style.width = '56px'; ring.style.height = '56px'; ring.style.borderColor = 'rgba(215,25,32,0.8)'; });
+            el.addEventListener('mouseleave', () => { ring.style.width = '36px'; ring.style.height = '36px'; ring.style.borderColor = 'rgba(215,25,32,0.4)'; });
+        });
+
+        // ── Loader ──
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.getElementById('page-loader').classList.add('hidden'); }, 300);
+        });
+
+        // ── Header scroll ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('z-header').classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+
+        // ── Data ──
+        const allCars = window.db ? db.getCars() : [];
+        document.getElementById('stat-total').textContent = allCars.length;
+
+        // ── Links map ──
+        const linkMap = { 
+            'f80': 'ferrari-f80.html', 
+            'revuelto': 'revuelto.html', 
+            'temerario': 'temerario.html', 
+            'urus-perfor': 'urus-se.html',
+            'bolide': 'bugatti.html',
+            'mclaren-p1': 'mclaren.html',
+            'db11': 'aston-martin.html',
+            'cc850': 'koenigsegg.html',
+            'zonda-cinque': 'pagani.html'
+        };
+        const getLink = id => linkMap[id] || `details.html?id=${id}`;
+
+        // ── Power normalizer (out of 2000 cv) ──
+        const parsePower = hp => { const n = parseInt(hp); return isNaN(n) ? 0 : Math.min((n / 2000) * 100, 100); };
+
+        // ── Render ──
+        const grid = document.getElementById('models-grid');
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        const makeCard = (car, idx) => {
+            const card = document.createElement('div');
+            card.className = 'mcard';
+            
+            const eng = car.engine || (car.specifications && car.specifications.engine) || 'N/A';
+            const cat = car.category || 'Hypercars';
+            const hpStr = car.hp || (car.specifications && car.specifications.horsepower) || '0 CV';
+            const tsStr = car.topSpeed || (car.specifications && car.specifications.topSpeed) || '0 km/h';
+
+            card.dataset.category = `${cat} ${car.brand}`;
+            card.dataset.engine = eng;
+
+            const powerPct = parsePower(hpStr);
+            const speedVal = tsStr.split(' ')[0];
+            const hpVal = hpStr.replace(/ CV| PS| HP/gi,'');
+            const priceDisplay = car.price || 'Contact for Pricing';
+
+            const carLink = getLink(car.id);
+            card.innerHTML = `
+                <div class="mcard-visual" onclick="window.location.href='${carLink}'" style="cursor: pointer;">
+                    <img src="${car.image}" alt="${car.name}" loading="lazy" onerror="this.style.opacity='0.3'">
+                    <div class="mcard-visual-overlay"></div>
+                    <span class="mcard-badge">${car.brand.toUpperCase()}</span>
+                    <span class="mcard-cat-tag">${cat}</span>
+                    <div class="mcard-ghost">${car.name.split(' ')[0]}</div>
+                </div>
+                <div class="mcard-body">
+                    <div class="mcard-brand">${car.brand.toUpperCase()} &nbsp;/ &nbsp;${eng}</div>
+                    <div class="mcard-name">${car.name}</div>
+                    <div class="mcard-engine">${eng} &nbsp;·&nbsp; ${cat}</div>
+                    <div class="mcard-stats">
+                        <div class="ms">
+                            <div class="ms-val">${hpVal}<span class="ms-unit"> CV</span></div>
+                            <div class="ms-lbl">Max Power</div>
+                        </div>
+                        <div class="ms">
+                            <div class="ms-val">${speedVal}<span class="ms-unit"> km/h</span></div>
+                            <div class="ms-lbl">Top Speed</div>
+                        </div>
+                        <div class="ms">
+                            <div class="ms-val" style="font-size:16px;">${priceDisplay}</div>
+                            <div class="ms-lbl">Valuation</div>
+                        </div>
+                    </div>
+                    <div class="mcard-power-bar">
+                        <div class="mcard-power-fill" style="width:0%" data-pct="${powerPct}"></div>
+                    </div>
+                    <div class="mcard-cta">
+                        <a href="${getLink(car.id)}" class="mcard-link">
+                            Discover More
+                            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                        <div class="mcard-price">${priceDisplay}</div>
+                    </div>
+                </div>
+            `;
+            return card;
+        };
+
+        const filterFn = (car, f) => {
+            const cat = car.category || 'Hypercars';
+            const eng = car.engine || (car.specifications && car.specifications.engine) || '';
+            
+            if (f === 'all') return true;
+            if (f === 'super-sports') return !cat.toLowerCase().includes('suv');
+            if (f === 'suv') return cat.toLowerCase().includes('suv');
+            if (f === 'hpev') return /hybrid|phev/i.test(eng);
+            return cat.toLowerCase().includes(f) || car.brand.toLowerCase() === f;
+        };
+
+        const render = () => {
+            grid.innerHTML = '';
+            const q = searchQuery.toLowerCase();
+            let i = 0;
+            const filtered = allCars.filter(car => {
+                const catMatch = filterFn(car, activeFilter);
+                const cat = car.category || 'Hypercars';
+                const eng = car.engine || (car.specifications && car.specifications.engine) || '';
+                const txtMatch = !q || [car.name, car.brand, cat, eng].some(s => s && s.toLowerCase().includes(q));
+                return catMatch && txtMatch;
+            });
+
+            document.getElementById('count-num').textContent = filtered.length;
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <h3>No Models Found</h3>
+                    <p>Try a different filter or search term</p>
+                </div>`;
+                return;
+            }
+
+            filtered.forEach((car, idx) => {
+                const card = makeCard(car, idx);
+                grid.appendChild(card);
+            });
+
+            // Animate power bars (IntersectionObserver)
+            const barObs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.style.width = e.target.dataset.pct + '%';
+                        barObs.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            document.querySelectorAll('.mcard-power-fill').forEach(b => barObs.observe(b));
+
+            // GSAP card reveal
+            if (typeof gsap !== 'undefined') {
+                gsap.registerPlugin(ScrollTrigger);
+                document.querySelectorAll('.mcard').forEach((card, ci) => {
+                    gsap.fromTo(card,
+                        { opacity: 0, y: 60 },
+                        { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out',
+                          scrollTrigger: { trigger: card, start: 'top 92%' },
+                          delay: (ci % 3) * 0.08 }
+                    );
+                });
+            }
+        };
+
+        // ── Filter pills ──
+        document.querySelectorAll('.fpill').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fpill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                render();
+                // toast
+                const toast = document.getElementById('toast');
+                toast.textContent = `✓ ${btn.textContent.trim()} selected`;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        });
+
+        // ── Search ──
+        document.getElementById('search-inp').addEventListener('input', e => {
+            searchQuery = e.target.value;
+            render();
+        });
+
+        // ── View toggle ──
+        const btnGrid = document.getElementById('vbtn-grid');
+        // Header Scroll Effect
+        const header = document.getElementById('z-header');
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        navToggle.addEventListener('click', () => {
+            navToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+        const btnList = document.getElementById('vbtn-list');
+        btnGrid.addEventListener('click', () => {
+            grid.classList.remove('list-mode');
+            btnGrid.classList.add('active'); btnList.classList.remove('active');
+        });
+        btnList.addEventListener('click', () => {
+            grid.classList.add('list-mode');
+            btnList.classList.add('active'); btnGrid.classList.remove('active');
+        });
+
+        // ── Hero GSAP ──
+        if (typeof gsap !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.from('.models-hero h1', { y: 60, opacity: 0, duration: 1.2, ease: 'expo.out', delay: 0.2 });
+            gsap.from('.hero-eyebrow', { opacity: 0, y: 15, duration: 1, ease: 'power3.out', delay: 0.3 });
+            gsap.from('.hero-sub', { opacity: 0, y: 15, duration: 1, ease: 'power3.out', delay: 0.4 });
+            gsap.from('.h-stat', { opacity: 0, y: 20, stagger: 0.08, duration: 0.8, ease: 'power3.out', delay: 0.3 });
+        }
+
+        // ── Initial render ──
+        render();
+    })();
+    </script>
+    <script src="cinematic.js"></script>
+</body>
+</html>

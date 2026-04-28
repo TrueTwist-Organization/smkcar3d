@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McLaren P1 | Design Suite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --accent: #FF8000; /* McLaren Orange */
+            --bg: #050505;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loading-screen {
+            position: fixed; inset: 0; background: #000; z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s ease;
+        }
+        .loader-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 20px; position: relative; overflow: hidden; }
+        .loader-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--accent); transition: width 0.3s; }
+
+        /* --- MAIN VIEW --- */
+        .viewer-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: 1; pointer-events: none;
+        }
+        model-viewer {
+            width: 100%; height: 100%;
+            background: transparent;
+            --poster-color: transparent;
+            pointer-events: auto;
+        }
+
+        /* --- SCROLL CONTENT --- */
+        .scroll-container {
+            position: relative; z-index: 2;
+        }
+        .scroll-section {
+            height: 100vh;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            padding: 0 8%;
+        }
+        .ui-left { width: 100%; max-width: 600px; pointer-events: auto; }
+        .ui-right { margin-left: auto; text-align: right; pointer-events: auto; }
+
+        /* --- TYPOGRAPHY --- */
+        h1 { font-size: clamp(40px, 8vw, 100px); line-height: 0.9; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; }
+        .desc { font-size: 16px; color: #888; max-width: 450px; line-height: 1.6; margin-bottom: 30px; }
+        .section-label { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); font-weight: 800; display: block; margin-bottom: 10px; }
+
+        .btn-exit {
+            position: fixed; top: 40px; left: 40px; z-index: 100;
+            padding: 12px 25px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05); color: #fff; text-decoration: none;
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em;
+            border-radius: 40px; backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .btn-exit:hover { background: #fff; color: #000; transform: translateY(-3px); }
+
+        .scroll-hint {
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+            z-index: 10; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3em;
+            color: #666; animation: float 2s infinite ease-in-out;
+        }
+        @keyframes float { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 10px); } }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <h2 style="font-weight: 900; font-size: 24px; letter-spacing: 0.2em;">MCLAREN</h2>
+        <div class="loader-bar"><div class="loader-progress" id="progress"></div></div>
+    </div>
+
+    <a href="mclaren.html" class="btn-exit">← Exit Design Suite</a>
+
+    <div class="viewer-container">
+        <model-viewer id="mclarenViewer"
+            src="mclaren_p1__www.vecarz.com (1).glb"
+            camera-orbit="45deg 75deg 3m"
+            field-of-view="18deg"
+            min-camera-orbit="auto auto 1m"
+            max-camera-orbit="auto auto 10m"
+            interaction-prompt="none"
+            camera-controls
+            disable-zoom
+            shadow-intensity="2"
+            environment-image="neutral"
+            exposure="1.2"
+            auto-rotate
+            rotation-per-second="2deg">
+        </model-viewer>
+    </div>
+
+    <div class="scroll-container">
+        <!-- FIRST SECTION -->
+        <div class="scroll-section" id="section-1">
+            <div class="ui-left">
+                <span class="section-label">Interactive Design Experience</span>
+                <h1>MCLAREN<br>P1</h1>
+                <p class="desc">A car engineered to be the ultimate driver's car on track and road. The McLaren P1 represents the pinnacle of high-technology hybrid performance.</p>
+            </div>
+        </div>
+
+        <!-- SECOND SECTION (SPACER FOR ZOOM) -->
+        <div class="scroll-section" style="height: 150vh;"></div>
+
+        <!-- THIRD SECTION -->
+        <div class="scroll-section">
+            <div class="ui-right">
+                <span class="section-label">Aerodynamic Perfection</span>
+                <h2 style="font-size: 48px; font-weight: 900;">DESIGNED<br>BY<br>AIR</h2>
+                <p class="desc" style="margin-left: auto;">Every line and surface is designed to minimize drag and maximize downforce, with an active rear wing that adjusts itself for the road ahead.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-hint">Scroll to Explore</div>
+
+    <script>
+        const modelViewer = document.getElementById('mclarenViewer');
+        const progress = document.getElementById('progress');
+
+        // Loading progress
+        modelViewer.addEventListener('progress', (e) => {
+            const p = Math.round(e.detail.totalProgress * 100);
+            progress.style.width = p + '%';
+            if(p === 100) {
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').style.display = 'none';
+                    }, 1000);
+                }, 500);
+            }
+        });
+
+        // GSAP Scroll Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Zoom In Animation
+        gsap.to(modelViewer, {
+            scrollTrigger: {
+                trigger: ".scroll-container",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1.5,
+            },
+            onUpdate: function() {
+                const prog = this.progress(); 
+                // Zoom from 3m to 1.5m
+                const distance = 3 - (prog * 1.5);
+                modelViewer.cameraOrbit = `45deg 75deg ${distance}m`;
+                modelViewer.fieldOfView = `${18 - (prog * 6)}deg`;
+            }
+        });
+
+        // Entrance Animation
+        window.addEventListener('load', () => {
+            gsap.from(".ui-left > *", {
+                opacity: 0,
+                x: -50,
+                stagger: 0.2,
+                duration: 1.5,
+                ease: "power4.out",
+                delay: 1.5
+            });
+        });
+
+    </script>
+</body>
+</html>

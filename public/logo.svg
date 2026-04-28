@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" class="brand-logo-svg">
+  <!-- Top Star -->
+  <path d="M50 5 L55 15 L65 20 L55 25 L50 35 L45 25 L35 20 L45 15 Z" fill="currentColor"/>
+  
+  <!-- Symmetrical Wings (Stylized) -->
+  <path d="M48 40 C35 40, 15 50, 10 70 C15 65, 25 60, 45 65 C40 55, 45 45, 48 40 Z" fill="currentColor"/>
+  <path d="M52 40 C65 40, 85 50, 90 70 C85 65, 75 60, 55 65 C60 55, 55 45, 52 40 Z" fill="currentColor"/>
+  
+  <!-- Inner Details -->
+  <path d="M25 68 C30 75, 40 75, 45 72 C40 78, 30 78, 25 75 Z" fill="currentColor" opacity="0.8"/>
+  <path d="M75 68 C70 75, 60 75, 55 72 C60 78, 70 78, 75 75 Z" fill="currentColor" opacity="0.8"/>
+  
+  <!-- Bottom Star (Smaller) -->
+  <path d="M50 75 L53 82 L60 85 L53 88 L50 95 L47 88 L40 85 L47 82 Z" fill="currentColor"/>
+</svg>

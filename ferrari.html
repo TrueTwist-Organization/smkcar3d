@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FERRARI | THE LEGACY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #ff0000; --bg: #000; --surface: #0a0a0a; --text: #fff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        .hero {
+            height: 100vh; width: 100%; position: relative;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .hero-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; filter: brightness(0.4);
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center;
+        }
+        .hero-title {
+            font-size: clamp(40px, 10vw, 120px); font-weight: 900;
+            letter-spacing: -0.02em; text-transform: uppercase;
+        }
+        .hero-tagline {
+            font-size: 14px; letter-spacing: 0.8em; color: var(--accent);
+            text-transform: uppercase; margin-top: 10px; font-weight: 700;
+        }
+
+        .section { padding: 120px 10%; }
+        .grid-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
+        
+        .sticky-title {
+            position: sticky; top: 120px;
+            font-size: 14px; font-weight: 800; color: var(--accent);
+            letter-spacing: 0.5em; text-transform: uppercase;
+        }
+
+        .content-chunk h2 {
+            font-size: 48px; font-weight: 900; letter-spacing: -0.01em;
+            margin-bottom: 30px; line-height: 1; text-transform: uppercase;
+        }
+        .content-chunk p {
+            font-size: 18px; line-height: 1.8; color: #aaa; margin-bottom: 60px;
+        }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+        .stat-item h4 { font-size: 10px; color: var(--accent); letter-spacing: 0.3em; margin-bottom: 10px; text-transform: uppercase; }
+        .stat-item p { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 0; }
+
+        .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 10%; margin-bottom: 120px; }
+        .gallery img { width: 100%; height: 400px; object-fit: cover; border-radius: 4px; transition: 0.5s; cursor: pointer; }
+        .gallery img:hover { filter: brightness(1.2) grayscale(0); transform: scale(1.02); }
+
+        .back-nav {
+            position: fixed; top: 30px; left: 30px; z-index: 1000;
+            color: #fff; text-decoration: none; font-size: 11px; font-weight: 900;
+            letter-spacing: 0.35em; background: rgba(0,0,0,0.6); padding: 14px 32px;
+            border-radius: 50px; border: 1.5px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+            text-transform: uppercase;
+        }
+        .back-nav:hover {
+            background: #D71920;
+            border-color: #D71920;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 15px 30px rgba(215,25,32,0.4);
+            color: #fff;
+        }
+
+        /* --- TEXT HOVER HIGHLIGHTS --- */
+        h1, h2, h4, p, li, strong, .hero-tagline, .sticky-title, .back-nav {
+            transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        }
+        h1:hover, h2:hover, .hero-title:hover {
+            color: #fff !important;
+            text-shadow: 0 0 20px #D71920, 0 0 40px rgba(215,25,32,0.6);
+            transform: translateY(-2px);
+        }
+        p:hover, li:hover, strong:hover, h4:hover, .sticky-title:hover, .hero-tagline:hover, .back-nav:hover {
+            color: #fff !important;
+            text-shadow: 0 0 15px rgba(215,25,32,0.4);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/discover" class="back-nav">← BACK TO ALL</a>
+
+    <section class="hero">
+        <video autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=2000" class="hero-img">
+            <source src="ferrari-bg.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1 class="hero-title">FERRARI</h1>
+            <p class="hero-tagline">THE SOUL OF RACING</p>
+        </div>
+    </section>
+
+    <!-- HISTORY & HQ -->
+    <section class="section">
+        <div class="grid-detail">
+            <div class="sticky-title">Origin & Legacy</div>
+            <div class="content-chunk">
+                <h2>The Prancing Horse</h2>
+                <p>Founded by Enzo Ferrari in 1939 as <strong>Auto Avio Costruzioni</strong>, the company initially produced race cars before officially becoming Ferrari S.p.A. in 1947. The first true Ferrari-badged car, the <strong>125 S</strong>, marked the beginning of one of the most iconic automotive legacies.</p>
+                <p>The Prancing Horse (<em>Cavallino Rampante</em>) symbol represents speed, power, and Italian passion — originally used by WWI pilot Francesco Baracca and later adopted by Ferrari.</p>
+                <p>Ferrari today stands as a global symbol of:</p>
+                <ul style="list-style: none; margin-bottom: 40px; color: #aaa; border-left: 2px solid var(--accent); padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">Extreme performance</li>
+                    <li style="margin-bottom: 10px;">Racing heritage</li>
+                    <li>Italian craftsmanship 🇮🇹</li>
+                </ul>
+                
+                <h2>Headquarters</h2>
+                <p>Ferrari is headquartered in <strong>Maranello</strong>. The factory has remained here since 1943 and includes the legendary <strong>Fiorano Circuit</strong> (private test track), advanced production facilities, and the Ferrari museum & design center.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- RULES & INNOVATIONS -->
+    <section class="section" style="background: var(--surface);">
+        <div class="grid-detail">
+            <div class="sticky-title">Ethos & Tech</div>
+            <div class="content-chunk">
+                <h2>Exclusivity Rules</h2>
+                <p>Ferrari carefully protects its brand prestige. Limited-edition cars like the <strong>Ferrari LaFerrari</strong> and <strong>Ferrari F40</strong> are not freely sold. Buyers must be loyal Ferrari clients, own multiple Ferraris, and maintain a stellar brand reputation. This creates extreme demand and rarity.</p>
+
+                <h2>Innovations</h2>
+                <p>Ferrari is a pioneer in automotive technology, blending F1 tech with road performance for pure driver emotion:</p>
+                <ul style="list-style: none; margin-bottom: 40px; color: #aaa; border-left: 2px solid var(--accent); padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">First semi-automatic gearbox in F1 (1989)</li>
+                    <li style="margin-bottom: 10px;">Hybrid hypercar tech (LaFerrari, SF90)</li>
+                    <li>Advanced <strong>Side Slip Control (SSC)</strong> system for precision handling</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAMOUS CARS & ACHIEVEMENTS -->
+    <section class="section">
+        <div class="grid-detail">
+            <div class="sticky-title">Glory & Models</div>
+            <div class="content-chunk">
+                <h2>Iconic Cars</h2>
+                <p>Machines that defined eras: <strong>Ferrari F40</strong> (last car approved by Enzo), <strong>250 GTO</strong> (one of the world's most valuable), and the <strong>Enzo</strong> (an F1-inspired tribute to the founder).</p>
+
+                <h2>Formula 1 Dominance</h2>
+                <p>Ferrari is the most successful team in Formula One history, with the longest continuous participation since 1950. Their records include <strong>16 Constructors’ Championships</strong> and 15 Drivers’ Championships.</p>
+                
+                <div class="stat-grid">
+                    <div class="stat-item"><h4>Max Power</h4><p>1015 CV (SF90 Stradale)</p></div>
+                    <div class="stat-item"><h4>F1 Titles</h4><p>16 Constructors</p></div>
+                    <div class="stat-item"><h4>Top Speed</h4><p>350+ km/h</p></div>
+                    <div class="stat-item"><h4>Icon Status</h4><p>F40 / 250 GTO</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <div class="gallery">
+        <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=800">
+        <img src="https://images.unsplash.com/photo-1592194996123-575084922123?auto=format&fit=crop&q=80&w=800">
+        <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&q=80&w=800">
+    </div>
+    <script src="cinematic.js"></script>
+</body>
+</html>

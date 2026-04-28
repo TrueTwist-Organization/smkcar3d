@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lamborghini Design Explorer | SMK CAR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700;900&display=swap" rel="stylesheet">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: #050505; color: #fff; overflow: hidden; }
+        
+        .explorer-container {
+            width: 100vw; height: 100vh; position: relative;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+        }
+        
+        model-viewer {
+            width: 100%; height: 100%;
+            --poster-color: transparent;
+        }
+        
+        .ui-overlay {
+            position: absolute; inset: 0; pointer-events: none;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 60px; z-index: 10;
+        }
+        
+        .header { pointer-events: all; }
+        .back-btn {
+            color: #fff; text-decoration: none; font-size: 11px; font-weight: 800;
+            letter-spacing: 0.3em; text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+            transition: 0.3s; opacity: 0.6;
+        }
+        .back-btn:hover { opacity: 1; transform: translateX(-5px); }
+        
+        .title-area { margin-top: 40px; }
+        .title-area h1 { font-size: clamp(30px, 5vw, 60px); font-weight: 900; line-height: 0.9; text-transform: uppercase; }
+        .title-area p { font-size: 11px; color: #666; letter-spacing: 0.4em; text-transform: uppercase; margin-top: 10px; }
+        
+        .controls-panel {
+            position: absolute; right: 60px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 30px; pointer-events: all;
+            background: rgba(20,20,20,0.4); backdrop-filter: blur(20px);
+            padding: 40px 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .control-group { display: flex; flex-direction: column; gap: 12px; }
+        .control-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.2em; }
+        
+        .color-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .color-btn {
+            width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;
+            transition: 0.3s cubic-bezier(0.19,1,0.22,1); position: relative;
+        }
+        .color-btn::after {
+            content: ''; position: absolute; inset: -5px; border: 1px solid rgba(255,255,255,0);
+            border-radius: 50%; transition: inherit;
+        }
+        .color-btn:hover { transform: scale(1.1); }
+        .color-btn.active::after { border-color: #fff; }
+        
+        .hud-bottom {
+            display: flex; justify-content: space-between; align-items: flex-end; width: 100%;
+        }
+        .hud-stats { display: flex; gap: 40px; }
+        .stat { display: flex; flex-direction: column; gap: 4px; }
+        .stat-val { font-size: 16px; font-weight: 800; }
+        .stat-lbl { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 0.1em; }
+        
+        .loading-screen {
+            position: fixed; inset: 0; background: #000; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: 1s ease;
+        }
+        .loading-circle {
+            width: 50px; height: 50px; border: 2px solid #333; border-top-color: #FF8C00;
+            border-radius: 50%; animation: spin 1s infinite linear;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .hide { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loading">
+        <div class="loading-circle"></div>
+    </div>
+
+    <div class="explorer-container">
+        <model-viewer id="lambo"
+            src="lamborghini_aventador.glb"
+            camera-controls
+            auto-rotate
+            exposure="1"
+            shadow-intensity="1"
+            environment-image="neutral"
+            camera-orbit="45deg 75deg 0.4m"
+            camera-target="0m 0m 0m"
+            field-of-view="15deg"
+            min-camera-orbit="auto auto 0.1m"
+            max-camera-orbit="auto auto 3m">
+        </model-viewer>
+        
+        <div class="ui-overlay">
+            <div class="header">
+                <a href="/revuelto" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to detail
+                </a>
+                <div class="title-area">
+                    <h1>LAMBORGHINI<br>AVENTADOR</h1>
+                    <p>Dynamic Design Explorer</p>
+                </div>
+            </div>
+            
+            <div class="controls-panel">
+                <div class="control-group">
+                    <span class="control-label">Exterior Finish</span>
+                    <div class="color-options">
+                        <div class="color-btn active" style="background: #FF8C00;" data-color="#FF8C00"></div>
+                        <div class="color-btn" style="background: #111;" data-color="#111"></div>
+                        <div class="color-btn" style="background: #fff;" data-color="#fff"></div>
+                        <div class="color-btn" style="background: #D71920;" data-color="#D71920"></div>
+                        <div class="color-btn" style="background: #2E5BFF;" data-color="#2E5BFF"></div>
+                        <div class="color-btn" style="background: #00E676;" data-color="#00E676"></div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <span class="control-label">Lighting</span>
+                    <button class="action-btn" style="background: none; border: 1px solid #333; color: #fff; padding: 10px; font-size: 9px; text-transform: uppercase;" id="toggleShadows">Deepen Shadows</button>
+                </div>
+            </div>
+            
+            <div class="hud-bottom">
+                <div class="hud-stats">
+                    <div class="stat"><span class="stat-val">Carbon</span><span class="stat-lbl">Chassis</span></div>
+                    <div class="stat"><span class="stat-val">PBR</span><span class="stat-lbl">Materials</span></div>
+                    <div class="stat"><span class="stat-val">GLB</span><span class="stat-lbl">Core File</span></div>
+                </div>
+                <div style="font-size: 8px; color: #333; letter-spacing: 0.5em; text-transform: uppercase;">SMK CAR Design System / 2.0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const viewer = document.querySelector('#lambo');
+        const loading = document.querySelector('#loading');
+        
+        viewer.addEventListener('load', () => {
+            loading.classList.add('hide');
+        });
+
+        // Color change logic
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const color = btn.dataset.color;
+                
+                // Update UI
+                document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Apply color to model
+                if (viewer.model) {
+                    const materials = viewer.model.materials;
+                    materials.forEach(mat => {
+                        // Focus on body materials (usually have 'car' or 'body' or 'paint' in name, but we can apply to all painted parts)
+                        if (mat.name.toLowerCase().includes('body') || mat.name.toLowerCase().includes('paint') || mat.name.toLowerCase().includes('car')) {
+                            const rgb = hexToRgb(color);
+                            mat.pbrMetallicRoughness.setBaseColorFactor([rgb.r/255, rgb.g/255, rgb.b/255, 1]);
+                        }
+                    });
+                }
+            });
+        });
+
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        document.getElementById('toggleShadows').addEventListener('click', () => {
+            const exp = parseFloat(viewer.getAttribute('exposure') || '1');
+            viewer.setAttribute('exposure', exp === 1 ? '1.5' : '1');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahi Shah - Sports Car World</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .title-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://picsum.photos/id/1015/2000/1200') center/cover no-repeat;
+        }
+
+        .car-card {
+            transition: all 0.3s ease;
+        }
+        
+        .car-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 25px 50px -12px rgb(234 179 8);
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 500px;
+            background-color: #111;
+            border-radius: 16px;
+        }
+
+        /* --- STAMP HOVER HIGHLIGHTS --- */
+        h1, h2, h3, p, span, a, .text-4xl, .text-7xl {
+            transition: all 0.3s ease;
+        }
+        h1:hover, h2:hover, h3:hover, .title-font:hover {
+            color: #fff !important;
+            text-shadow: 0 0 20px #eab308, 0 0 40px rgba(234,179,8,0.6);
+            transform: translateY(-2px);
+        }
+        p:hover, span:hover, .text-yellow-400:hover {
+            text-shadow: 0 0 15px rgba(234,179,8,0.4);
+            transform: scale(1.01);
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <!-- NAVBAR -->
+    <nav class="bg-zinc-950 border-b border-yellow-500 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-bold text-2xl">🏎️</div>
+                <h1 class="title-font text-3xl tracking-widest">MAHI SHAH</h1>
+                <span class="text-yellow-400 text-sm mt-1">SPORTS CARS</span>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-lg">
+                <a href="#my-car" class="hover:text-yellow-400 transition">મારી કાર</a>
+                <a href="#3d-model" class="hover:text-yellow-400 transition">3D મોડલ</a>
+                <a href="#other-cars" class="hover:text-yellow-400 transition">બીજી સ્પોર્ટ્સ કાર</a>
+                <a href="#contact" class="hover:text-yellow-400 transition">સંપર્ક</a>
+            </div>
+
+            <a href="#" onclick="document.getElementById('3d-model').scrollIntoView({behavior: 'smooth'})" 
+               class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded-full font-bold flex items-center gap-2 transition">
+                <span>🚀 3D જુઓ</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-bg h-screen flex items-center">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="title-font text-7xl md:text-8xl font-bold mb-4 tracking-tighter">WELCOME TO</h2>
+            <h1 class="title-font text-8xl md:text-9xl text-yellow-400 mb-8">MY SPORTS CAR</h1>
+            <p class="text-2xl max-w-2xl mx-auto mb-12">અદ્ભુત સ્પીડ, પાવર અને સ્ટાઇલ – તમારી સ્પોર્ટ્સ કારની દુનિયા</p>
+            
+            <div class="flex flex-wrap gap-6 justify-center">
+                <a href="#my-car" 
+                   class="bg-white text-black px-10 py-5 rounded-2xl text-xl font-bold hover:scale-105 transition flex items-center gap-3">
+                    મારી કાર વિશે જાણો 🏁
+                </a>
+                <a href="#3d-model" 
+                   class="border-2 border-yellow-400 px-10 py-5 rounded-2xl text-xl font-bold hover:bg-yellow-400 hover:text-black transition flex items-center gap-3">
+                    3D મોડલ જુઓ (જલ્દી આવશે)
+                </a>
+            </div>
+            
+            <div class="mt-20 text-yellow-400 text-sm flex items-center justify-center gap-2">
+                <div class="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
+                SCROLL DOWN FOR MORE
+            </div>
+        </div>
+    </section>
+
+    <!-- MY CAR SECTION -->
+    <section id="my-car" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="title-font text-6xl font-bold mb-6">મારી સ્પોર્ટ્સ કાર</h2>
+                <div class="text-4xl text-yellow-400 mb-8">[તમારી કારનું નામ અહીં લખો] <span class="text-white text-3xl">[મોડલ નંબર]</span></div>
+                
+                <p class="text-xl leading-relaxed mb-10 text-gray-300">
+                    અહીં તમારી કારની પૂરી વિગતો લખો – એન્જિન, સ્પીડ, ફીચર્સ, કિંમત, વર્ષ વગેરે. 
+                    જે કંઈ પણ તમે બતાવવા માંગો તે લખી શકો છો.
+                </p>
+                
+                <div class="flex gap-4 flex-wrap">
+                    <div class="bg-zinc-900 px-6 py-4 rounded-2xl text-center min-w-[140px]">
+                        <div class="text-yellow-400 text-sm">ટોપ સ્પીડ</div>
+                        <div class="text-4xl font-bold">[XXX km/h]</div>
+                    </div>
+                    <div class="bg-zinc-900 px-6 py-4 rounded-2xl text-center min-w-[140px]">
+                        <div class="text-yellow-400 text-sm">0-100 km/h</div>
+                        <div class="text-4xl font-bold">[X.X] sec</div>
+                    </div>
+                    <div class="bg-zinc-900 px-6 py-4 rounded-2xl text-center min-w-[140px]">
+                        <div class="text-yellow-400 text-sm">પાવર</div>
+                        <div class="text-4xl font-bold">[XXX] bhp</div>
+                    </div>
+                    <div class="bg-zinc-900 px-6 py-4 rounded-2xl text-center min-w-[140px]">
+                        <div class="text-yellow-400 text-sm">કિંમત</div>
+                        <div class="text-4xl font-bold">₹ [XX] લાખ</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-zinc-950 p-8 rounded-3xl border border-yellow-500/30">
+                <img src="https://picsum.photos/id/1015/800/600" alt="મારી કાર" 
+                     class="w-full rounded-2xl shadow-2xl">
+                <p class="text-center mt-6 text-gray-400 text-sm">તમારી કારની હાઈ ક્વોલિટી ફોટો અહીં મૂકો</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3D MODEL SECTION -->
+    <section id="3d-model" class="bg-zinc-950 py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="title-font text-6xl font-bold text-center mb-6">3D મોડલ વ્યુઅર</h2>
+            <p class="text-center text-xl mb-12 max-w-xl mx-auto">
+                હજુ સુધી 3D મોડલ તૈયાર નથી. જ્યારે તમારી પાસે .GLB ફાઇલ આવશે ત્યારે નીચેના કોડમાં લિંક બદલી દો.
+            </p>
+            
+            <div class="max-w-4xl mx-auto bg-black rounded-3xl p-4 shadow-2xl">
+                <!-- 3D MODEL VIEWER -->
+                <model-viewer 
+                    id="main-model"
+                    src="https://modelviewer.dev/assets/ShopifyModels/Astronaut.glb" 
+                    alt="મારી સ્પોર્ટ્સ કાર 3D મોડલ"
+                    camera-controls
+                    auto-rotate
+                    rotation-per-second="30deg"
+                    shadow-intensity="1"
+                    exposure="0.8"
+                    environment-image="https://modelviewer.dev/assets/environment.hdr"
+                    style="width: 100%; height: 520px;">
+                </model-viewer>
+                
+                <div class="text-center mt-6 text-yellow-400 text-sm flex items-center justify-center gap-2">
+                    <span class="animate-pulse">●</span> 
+                    આ પ્લેસહોલ્ડર છે – તમારી .GLB ફાઇલનું લિંક અહીં મૂકો
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 text-xs text-gray-500">
+                મોડલ અપલોડ કરવા માટે: GitHub, Sketchfab કે Google Drive પર .GLB અપલોડ કરીને તેનું direct link અહીં paste કરો
+            </div>
+        </div>
+    </section>
+
+    <!-- OTHER SPORTS CARS SECTION -->
+    <section id="other-cars" class="max-w-7xl mx-auto px-6 py-20">
+        <h2 class="title-font text-6xl font-bold text-center mb-16">બીજી સ્પોર્ટ્સ કાર્સ</h2>
+        
+        <div id="cars-grid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            
+            <!-- EXAMPLE CARD 1 - તમે આને કોપી કરીને નવી કાર ઉમેરી શકો છો -->
+            <div class="car-card bg-zinc-900 rounded-3xl overflow-hidden border border-yellow-500/20">
+                <div class="h-52 bg-zinc-800 flex items-center justify-center text-7xl">🏎️</div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold">Ferrari 488 GTB</h3>
+                            <p class="text-yellow-400">2023 • V8 • 670 bhp</p>
+                        </div>
+                        <span class="px-4 py-1 bg-yellow-400 text-black rounded-2xl text-sm font-bold">₹ 2.5 Cr</span>
+                    </div>
+                    <p class="text-gray-400 mt-4 line-clamp-3">અદ્ભુત એન્જિન, ટોપ સ્પીડ 330+ km/h, અત્યાધુનિક ટેક્નોલોજી સાથેની સ્પોર્ટ્સ કાર.</p>
+                    
+                    <button onclick="show3DModal(this)" 
+                            class="mt-6 w-full py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-2xl flex items-center justify-center gap-2">
+                        3D મોડલ જુઓ
+                    </button>
+                </div>
+            </div>
+
+            <!-- EXAMPLE CARD 2 -->
+            <div class="car-card bg-zinc-900 rounded-3xl overflow-hidden border border-yellow-500/20">
+                <div class="h-52 bg-zinc-800 flex items-center justify-center text-7xl">🔥</div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold">Lamborghini Huracán</h3>
+                            <p class="text-yellow-400">2024 • V10 • 610 bhp</p>
+                        </div>
+                        <span class="px-4 py-1 bg-yellow-400 text-black rounded-2xl text-sm font-bold">₹ 4.0 Cr</span>
+                    </div>
+                    <p class="text-gray-400 mt-4 line-clamp-3">બુલ્લી ડિઝાઇન, અસાધારણ પર્ફોર્મન્સ અને સ્પીડની દુનિયા.</p>
+                    
+                    <button onclick="show3DModal(this)" 
+                            class="mt-6 w-full py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-2xl flex items-center justify-center gap-2">
+                        3D મોડલ જુઓ
+                    </button>
+                </div>
+            </div>
+
+            <!-- EXAMPLE CARD 3 -->
+            <div class="car-card bg-zinc-900 rounded-3xl overflow-hidden border border-yellow-500/20">
+                <div class="h-52 bg-zinc-800 flex items-center justify-center text-7xl">⚡</div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-2xl font-bold">Porsche 911 Turbo S</h3>
+                            <p class="text-yellow-400">2025 • Twin Turbo • 650 bhp</p>
+                        </div>
+                        <span class="px-4 py-1 bg-yellow-400 text-black rounded-2xl text-sm font-bold">₹ 3.2 Cr</span>
+                    </div>
+                    <p class="text-gray-400 mt-4 line-clamp-3">લક્ઝરી અને પર્ફોર્મન્સનું પરફેક્ટ મિશ્રણ.</p>
+                    
+                    <button onclick="show3DModal(this)" 
+                            class="mt-6 w-full py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-2xl flex items-center justify-center gap-2">
+                        3D મોડલ જુઓ
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="text-center mt-16">
+            <button onclick="addNewCarCard()" 
+                    class="bg-transparent border-2 border-dashed border-yellow-400 hover:border-yellow-500 text-yellow-400 px-8 py-4 rounded-3xl font-bold flex items-center gap-3 mx-auto">
+                ➕ નવી સ્પોર્ટ્સ કાર ઉમેરો
+            </button>
+            <p class="text-xs text-gray-500 mt-4">ફ્યુચરમાં બધી કાર માટે આ સ્ટ્રક્ચર રેડી છે – બસ કોપી-પેસ્ટ કરો!</p>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="bg-zinc-950 py-20 border-t border-yellow-500">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="title-font text-5xl font-bold mb-8">સંપર્ક કરો</h2>
+            <p class="text-2xl">Mahi Shah • Ahmedabad, Gujarat</p>
+            <p class="text-yellow-400 mt-2">Email: [tamaru@email.com] • Phone: [તમારો નંબર]</p>
+            <div class="mt-12 text-sm opacity-50">© 2026 Mahi Shah Sports Car Site – Future Ready Structure</div>
+        </div>
+    </section>
+
+    <!-- 3D MODAL FOR OTHER CARS -->
+    <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[9999]">
+        <div class="max-w-4xl w-full mx-4 bg-zinc-900 rounded-3xl overflow-hidden">
+            <div class="flex justify-between items-center px-8 py-5 border-b">
+                <h3 class="text-2xl font-bold" id="modal-title">3D મોડલ</h3>
+                <button onclick="hideModal()" class="text-4xl leading-none text-yellow-400">×</button>
+            </div>
+            <model-viewer id="modal-model" 
+                          src="https://modelviewer.dev/assets/ShopifyModels/Astronaut.glb"
+                          alt="3D મોડલ"
+                          camera-controls
+                          auto-rotate
+                          style="width: 100%; height: 520px;">
+            </model-viewer>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            return {
+                config(userConfig = {}) {
+                    return {
+                        content: [],
+                        theme: { extend: {} },
+                        plugins: [],
+                        ...userConfig,
+                    }
+                },
+                theme(config) {
+                    return config.theme
+                }
+            }
+        }
+        const config = initializeTailwind().config()
+        document.documentElement.setAttribute('data-tailwind-config', JSON.stringify(config))
+
+        // 3D Modal functions
+        function show3DModal(btn) {
+            const card = btn.parentElement.parentElement
+            const title = card.querySelector('h3').textContent
+            document.getElementById('modal-title').textContent = title + " 3D"
+            
+            // તમે અહીં અલગ અલગ કાર માટે અલગ GLB લિંક મૂકી શકો છો
+            const modalModel = document.getElementById('modal-model')
+            modalModel.src = "https://modelviewer.dev/assets/ShopifyModels/Astronaut.glb" // બદલી શકો છો
+            
+            document.getElementById('modal').classList.remove('hidden')
+            document.getElementById('modal').classList.add('flex')
+        }
+
+        function hideModal() {
+            const modal = document.getElementById('modal')
+            modal.classList.add('hidden')
+            modal.classList.remove('flex')
+        }
+
+        // નવી કાર કાર્ડ ઉમેરવાનું ફંક્શન (ફ્યુચર માટે)
+        function addNewCarCard() {
+            const grid = document.getElementById('cars-grid')
+            const newCardHTML = `
+                <div class="car-card bg-zinc-900 rounded-3xl overflow-hidden border border-yellow-500/20">
+                    <div class="h-52 bg-zinc-800 flex items-center justify-center text-7xl">🏎️</div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-2xl font-bold">[નવી કારનું નામ અહીં લખો]</h3>
+                                <p class="text-yellow-400">[વર્ષ] • [એન્જિન] • [bhp]</p>
+                            </div>
+                            <span class="px-4 py-1 bg-yellow-400 text-black rounded-2xl text-sm font-bold">₹ [કિંમત]</span>
+                        </div>
+                        <p class="text-gray-400 mt-4 line-clamp-3">[કાર વિશે ટૂંકી માહિતી અહીં લખો]</p>
+                        <button onclick="show3DModal(this)" 
+                                class="mt-6 w-full py-4 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-2xl flex items-center justify-center gap-2">
+                            3D મોડલ જુઓ
+                        </button>
+                    </div>
+                </div>
+            `
+            grid.innerHTML += newCardHTML
+            alert('✅ નવી કાર કાર્ડ ઉમેરાઈ ગઈ! હવે એડિટ કરીને નામ, મોડલ અને ઇન્ફો બદલી દો.')
+        }
+
+        console.log('%c✅ Mahi Shah Sports Car Website Structure Ready!', 'color: #facc15; font-size: 18px; font-weight: bold')
+    </script>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A LEGEND REBORN | Cinematic 3D Experience</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Three.js & Loaders (ES Modules) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-main: #ffffff;
+            --accent-red: #D71920; /* Ferrari Red */
+            --glass-bg: rgba(10, 10, 10, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            overscroll-behavior: none;
+        }
+
+        /* Loading Screen */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out;
+        }
+        .loader-text {
+            font-size: 14px;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+        .progress-bar-container {
+            width: 200px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-red);
+            transition: width 0.2s;
+        }
+
+        /* 3D Canvas Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto; /* Allow orbit controls */
+            cursor: grab;
+        }
+        #canvas-container:active { cursor: grabbing; }
+
+        /* UI Overlay Layer */
+        #ui-layer {
+            position: relative;
+            z-index: 10;
+            pointer-events: none; /* Let clicks pass through to canvas when not on UI */
+        }
+
+        /* Generic Section Styling */
+        section {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            padding: 0 10vw;
+            position: relative;
+        }
+
+        h1, h2, h3 { text-transform: uppercase; font-weight: 900; line-height: 1; }
+        
+        .title-huge {
+            font-size: clamp(40px, 8vw, 100px);
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            font-size: 12px;
+            letter-spacing: 0.4em;
+            color: var(--accent-red);
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .desc {
+            font-size: 16px;
+            font-weight: 300;
+            color: #aaa;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 4px;
+            pointer-events: auto;
+        }
+
+        /* specific alignments */
+        .align-left { justify-content: flex-start; }
+        .align-right { justify-content: flex-end; text-align: right; }
+        .align-center { justify-content: center; text-align: center; }
+
+        /* CTA Button */
+        .btn-premium {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 18px 45px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.19,1,0.22,1);
+            pointer-events: auto;
+            margin-top: 30px;
+            outline: none;
+        }
+        .btn-premium:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Scroll Hint */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+        .scroll-hint span {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, #fff);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .hidden-start { opacity: 0; transform: translateY(40px); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="loader-text">Loading Assets</div>
+        <div class="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- 3D Environment -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay / Scroll Trigger Sections -->
+    <div id="ui-layer">
+        
+        <!-- SECTION 1: INTRO -->
+        <section class="align-center section-intro">
+            <div>
+                <span class="subtitle hidden-start" id="s1-sub">A LEGEND REBORN</span>
+                <h1 class="title-huge hidden-start" id="s1-title">PURE<br>ADRENALINE</h1>
+                <div class="scroll-hint hidden-start" id="s1-scroll">
+                    <span>Scroll to Explore</span>
+                    <div class="scroll-line"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: DESIGN -->
+        <section class="align-left section-design">
+            <div class="glass-panel hidden-start" id="s2-panel">
+                <span class="subtitle">AERODYNAMIC DESIGN</span>
+                <h2 class="title-huge" style="font-size: 50px;">SCULPTED<br>BY THE WIND</h2>
+                <p class="desc">Every surface acts as an aerofoil, dramatically increasing downforce without adding drag. The sleek metallic profile slices through the air with surgical precision.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ENGINE / POWER -->
+        <section class="align-right section-engine">
+            <div class="glass-panel hidden-start" id="s3-panel">
+                <span class="subtitle">THE HEARTBEAT</span>
+                <h2 class="title-huge" style="font-size: 50px;">V12<br>SYMPHONY</h2>
+                <p class="desc">At the core lies an uncompromising naturally aspirated V12 engine. Capable of soaring past 9000 RPM, delivering immediate, brutal power to the tarmac.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: PERFORMANCE -->
+        <section class="align-left section-perf">
+            <div class="glass-panel hidden-start" id="s4-panel">
+                <span class="subtitle">MAXIMUM VELOCITY</span>
+                <h2 class="title-huge" style="font-size: 50px;">1000+ CV</h2>
+                <p class="desc">With unparalleled power-to-weight ratios, this masterpiece bridges the gap between Formula 1 technology and street-legal homologation.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: FINAL SHOT -->
+        <section class="align-center section-final">
+            <div class="hidden-start" id="s5-content">
+                <h2 class="title-huge" style="font-size: clamp(50px, 10vw, 150px);">OWN THE<br>FUTURE</h2>
+                <button class="btn-premium">CONFIGURE NOW</button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- GSAP & Three.js Logic -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        /* =====================================
+           1. INITIALIZATION & SETUP
+        ===================================== */
+        const container = document.getElementById('canvas-container');
+        
+        const scene = new THREE.Scene();
+        // Add minimal fog to blend the horizon into dark background
+        scene.fog = new THREE.FogExp2(0x050505, 0.05);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        // Start camera slightly above and looking at front
+        camera.position.set(0, 1.5, 6.5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        let modelGroup = new THREE.Group();
+        scene.add(modelGroup);
+        let carModel;
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = false; // Zoom controlled by scroll
+        controls.enablePan = false;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05; // don't go below ground
+        
+        // We will pause orbit controls while scrolling so they don't fight
+        let isUserDragging = false;
+        controls.addEventListener('start', () => isUserDragging = true);
+        controls.addEventListener('end', () => {
+            isUserDragging = false;
+            // Snap back to timeline state slightly after drag
+            gsap.to(camera.position, {
+                x: tlParams.camX,
+                y: tlParams.camY,
+                z: tlParams.camZ,
+                duration: 1.5,
+                ease: "power2.out"
+            });
+        });
+
+        /* =====================================
+           2. LIGHTING & ENVIRONMENT (HDRI)
+        ===================================== */
+        // Dramatic cinematic spotlight
+        const spotLight = new THREE.SpotLight(0xffffff, 500); // Intensity adjusted for ACES
+        spotLight.position.set(0, 8, 0);
+        spotLight.angle = Math.PI / 3;
+        spotLight.penumbra = 0.8;
+        spotLight.castShadow = true;
+        spotLight.shadow.mapSize.width = 2048;
+        spotLight.shadow.mapSize.height = 2048;
+        spotLight.shadow.bias = -0.0001;
+        scene.add(spotLight);
+
+        // Subtle red accent light
+        const redLight = new THREE.PointLight(0xD71920, 100, 10);
+        redLight.position.set(-2, 1, -2);
+        scene.add(redLight);
+
+        // Fake drop shadow plane directly under the car
+        const shadowGeo = new THREE.PlaneGeometry(6, 10);
+        const shadowMat = new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            transparent: true,
+            opacity: 0.8,
+            depthWrite: false
+        });
+        const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
+        shadowPlane.rotation.x = -Math.PI / 2;
+        shadowPlane.position.y = 0.01;
+        scene.add(shadowPlane);
+
+        // Grid helper for generic sci-fi/test-track feel
+        const gridHelper = new THREE.GridHelper(40, 40, 0x222222, 0x111111);
+        gridHelper.position.y = 0;
+        scene.add(gridHelper);
+
+        /* =====================================
+           3. ASSET LOADING (Optimized GLB)
+        ===================================== */
+        const manager = new THREE.LoadingManager();
+        const progressBar = document.getElementById('progress-bar');
+        
+        manager.onProgress = function (url, itemsLoaded, itemsTotal) {
+            progressBar.style.width = (itemsLoaded / itemsTotal * 100) + '%';
+        };
+
+        manager.onLoad = function () {
+            // Fade out loader
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+                initScrollAnimations();
+                introAnimation();
+            }, 1000);
+        };
+
+        // Note: I'm loading an existing highly-detailed model from your directory!
+        // Using "lamborghini_aventador.glb" or "farrari.glb" from previous steps
+        const loader = new GLTFLoader(manager);
+        loader.load('/farrari.glb', function (gltf) {
+            carModel = gltf.scene;
+            
+            // Adjust materials to be more glossy/metallic for premium feel
+            carModel.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    if (child.material) {
+                        child.material.envMapIntensity = 1.5;
+                        // Boost glossiness of car paint specifically
+                        if (child.material.name.toLowerCase().includes('paint') || child.material.name.toLowerCase().includes('body')) {
+                            child.material.metalness = 0.8;
+                            child.material.roughness = 0.1;
+                            child.material.color.setHex(0xD71920); // Force Ferrari Red for visual
+                        }
+                    }
+                }
+            });
+
+            // Scale and position model properly
+            const box = new THREE.Box3().setFromObject(carModel);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            const maxAxis = Math.max(size.x, size.y, size.z);
+            
+            // Normalize scale to fit nicely in view
+            carModel.scale.multiplyScalar(4.0 / maxAxis);
+            
+            // Recompute center
+            const box2 = new THREE.Box3().setFromObject(carModel);
+            const center2 = box2.getCenter(new THREE.Vector3());
+            
+            // Shift model to be flush with ground
+            carModel.position.x = -center2.x;
+            carModel.position.y = -box2.min.y;
+            carModel.position.z = -center2.z;
+
+            modelGroup.add(carModel);
+
+            // Add dummy HDRI for amazing reflections without external network downloads 
+            // Better to load an actual .hdr if available, but directional lights handles it ok
+        }, undefined, function (error) {
+            console.error('Error loading car model:', error);
+            // Fallback object to prevent breaking if file not found
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(2,1,4), new THREE.MeshStandardMaterial({color: 0xD71920, metalness: 0.8, roughness: 0.2}));
+            mesh.position.y = 0.5;
+            modelGroup.add(mesh);
+        });
+
+        /* =====================================
+           4. INTRO ANIMATION & IDLE LOOP
+        ===================================== */
+        // Auto-rotation object to add life to the scene
+        const clock = new THREE.Clock();
+
+        function introAnimation() {
+            // Initial UI Fade In
+            gsap.to(["#s1-sub", "#s1-title", "#s1-scroll"], {
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+
+            // Camera sweep in from high angle to head-on
+            gsap.fromTo(camera.position, 
+                { y: 5, z: 8 }, 
+                { y: 1.5, z: 6.5, duration: 2.5, ease: "power2.out" }
+            );
+            
+            // Lighting turns on dramatically
+            gsap.fromTo(spotLight, { intensity: 0 }, { intensity: 500, duration: 4, ease: "power2.inOut" });
+        }
+
+
+        /* =====================================
+           5. SCROLL-BASED CINEMATIC TIMELINE
+        ===================================== */
+        // Object to hold camera coordinates mapped to scroll
+        const tlParams = {
+            camX: 0, camY: 1.5, camZ: 6.5,  // Front
+            lookX: 0, lookY: 0.5, lookZ: 0, // Car center
+            rotY: 0 // Overall group rotation
+        };
+
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const tm = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#ui-layer",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1, // Smooth dampening on scrub
+                    onUpdate: (self) => {
+                        // Apply GSAP values to Three.js camera
+                        if (!isUserDragging) {
+                            camera.position.set(tlParams.camX, tlParams.camY, tlParams.camZ);
+                            // Ensure camera is looking at target
+                            camera.lookAt(tlParams.lookX, tlParams.lookY, tlParams.lookZ);
+                        }
+                        modelGroup.rotation.y = tlParams.rotY;
+
+                        // Add subtle dynamic lighting based on scroll speed (Performance section)
+                        const velocity = Math.abs(self.getVelocity());
+                        if(velocity > 100) {
+                            redLight.intensity = Math.min(100 + velocity * 0.1, 800);
+                        } else {
+                            gsap.to(redLight, {intensity: 100, duration: 0.5});
+                        }
+                    }
+                }
+            });
+
+            // SCROLL TRANSITION 1: Intro -> Design 
+            // Camera moves to side profile, car rotates slightly
+            tm.to(tlParams, {
+                camX: 5.5, camY: 1.5, camZ: 3.5, // Move right
+                rotY: Math.PI / 8, // slight angle
+                ease: "power1.inOut"
+            }, "scene1");
+
+            // UI Reveal for Design
+            tm.fromTo("#s2-panel", { opacity: 0, x: -50 }, { opacity: 1, x: 0 }, "scene1+=0.3");
+            tm.to(["#s1-sub", "#s1-title", "#s1-scroll"], { opacity: 0, y: -50 }, "scene1");
+
+            // SCROLL TRANSITION 2: Design -> Engine
+            // Camera swoops to the rear
+            tm.to("#s2-panel", { opacity: 0, x: -50 }, "scene2");
+            tm.to(tlParams, {
+                camX: -3.5, camY: 2.0, camZ: -6, // Move to back left High
+                lookX: 0, lookY: 0.7, lookZ: -1, // Look down at engine bay
+                rotY: 0,
+                ease: "power1.inOut"
+            }, "scene2");
+            // Highlight red engine glow
+            tm.to(redLight.position, {x: 0, y: 1, z: -2}, "scene2");
+            tm.to(redLight, {intensity: 800}, "scene2");
+            
+            // UI Reveal for Engine
+            tm.fromTo("#s3-panel", { opacity: 0, x: 50 }, { opacity: 1, x: 0 }, "scene2+=0.3");
+
+            // SCROLL TRANSITION 3: Engine -> Performance
+            // Ultra wide low ground angle
+            tm.to("#s3-panel", { opacity: 0, x: 50 }, "scene3");
+            tm.to(tlParams, {
+                camX: -5.5, camY: 0.3, camZ: 4.5, // Low front-side angle
+                lookX: 0, lookY: 0.3, lookZ: 0,
+                ease: "power2.inOut"
+            }, "scene3");
+            tm.to(redLight, {intensity: 100}, "scene3");
+
+            // UI Reveal for Performance
+            tm.fromTo("#s4-panel", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1 }, "scene3+=0.4");
+
+            // SCROLL TRANSITION 4: Performance -> Final Shot
+            // Majestic slow rotation back to front, but further back
+            tm.to("#s4-panel", { opacity: 0, scale: 0.9 }, "scene4");
+            tm.to(tlParams, {
+                camX: 0, camY: 1.2, camZ: 7.5,
+                rotY: -Math.PI * 2, // Full spin
+                lookX: 0, lookY: 0.5, lookZ: 0,
+                ease: "power1.inOut"
+            }, "scene4");
+
+            // Final Title Reveal
+            tm.fromTo("#s5-content", { opacity: 0, y: 50 }, { opacity: 1, y: 0 }, "scene4+=0.6");
+        }
+
+
+        /* =====================================
+           6. RENDER LOOP
+        ===================================== */
+        window.addEventListener('resize', onWindowResize, false);
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Idle gentle rotation if resting (not scrolling)
+            if(!isUserDragging) {
+                // You can add subtle floating here
+                const time = clock.getElapsedTime();
+                // We use scroll position, so we won't auto-rotate X/Z to not ruin GSAP, 
+                // but a tiny breathing y-bounce is nice:
+                modelGroup.position.y = Math.sin(time * 2) * 0.005;
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

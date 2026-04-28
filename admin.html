@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN | SMK Car Fleet Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body style="background: #050505;">
+
+    <nav id="navbar">
+        <a href="/" class="logo">SMK CAR</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#about">About</a>
+            <a href="/discover">BRANDS</a>
+            <a href="/models">cars</a>
+        </div>
+    </nav>
+
+    <div class="section" style="max-width: 1440px; margin: 0 auto; padding-top: 200px;">
+        <h1 class="section-title" style="margin-bottom: 50px;">FLEET <br> MANAGEMENT</h1>
+
+        <!-- ADD CAR FORM -->
+        <section class="section" style="padding: 0; background: var(--gray); border: 1px solid rgba(255,255,255,0.05); padding: 50px; margin-bottom: 50px;">
+            <h2 style="font-size: 24px; margin-bottom: 30px;">DEPLOY NEW ASSET</h2>
+            <form id="car-form">
+                <input type="hidden" id="edit-id">
+                <div class="grid-layout" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="form-group">
+                        <label>Vehicle Name</label>
+                        <input type="text" id="name" required placeholder="E.G. CHIRON">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Marque</label>
+                        <select id="brand" style="width: 100%; background: #050505; color: white; border: 1px solid rgba(255,255,255,0.1); padding: 20px;">
+                            <!-- Brands Injected -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valuation ($)</label>
+                        <input type="text" id="price" required placeholder="E.G. $3,000,000">
+                    </div>
+                    <div class="form-group">
+                        <label>Peak Power (HP)</label>
+                        <input type="text" id="hp" required placeholder="E.G. 1500 CV">
+                    </div>
+                    <div class="form-group">
+                        <label>Vmax (TOP SPEED)</label>
+                        <input type="text" id="topSpeed" required placeholder="E.G. 420 KM/H">
+                    </div>
+                    <div class="form-group">
+                        <label>Engine Core</label>
+                        <input type="text" id="engine" required placeholder="E.G. W16">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Visual Asset (URL)</label>
+                        <input type="text" id="image" required placeholder="IMAGE URL">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 30px;">SEAL AND DEPLOY ASSET</button>
+            </form>
+        </section>
+
+        <!-- INVENTORY LIST -->
+        <section class="section" style="padding: 0;">
+            <h2 style="font-size: 24px; margin-bottom: 30px;">ACTIVE INVENTORY</h2>
+            <div style="overflow-x: auto;">
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>REF</th><th>IDENTITY</th><th>MARQUE</th><th>PRICE</th><th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-container">
+                        <!-- Injected -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="carsData.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('inventory-container');
+            const brandSelect = document.getElementById('brand');
+            const form = document.getElementById('car-form');
+            const editIdInput = document.getElementById('edit-id');
+
+            const brands = window.db ? db.getBrands() : [];
+            const cars = window.db ? db.getCars() : [];
+
+            // Populate brand dropdown
+            brands.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = b.name;
+                brandSelect.appendChild(opt);
+            });
+
+            function renderInventory() {
+                container.innerHTML = '';
+                const currentCars = window.db ? db.getCars() : [];
+                currentCars.forEach((car, idx) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>0${idx + 1}</td>
+                        <td style="font-weight: 800; color: white;">${car.name}</td>
+                        <td style="color: grey; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;">${car.brand}</td>
+                        <td style="color: var(--gold);">${car.price}</td>
+                        <td>
+                            <button class="btn-edit" onClick="editCar(${car.id})">EDIT DATA</button>
+                            <button class="btn-delete" onClick="deleteCar(${car.id})">PURGE</button>
+                        </td>
+                    `;
+                    container.appendChild(row);
+                });
+            }
+
+            renderInventory();
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const currentCars = window.db ? db.getCars() : [];
+                const newCar = {
+                    id: editIdInput.value ? parseInt(editIdInput.value) : Date.now(),
+                    name: document.getElementById('name').value,
+                    brand: document.getElementById('brand').value,
+                    price: document.getElementById('price').value,
+                    hp: document.getElementById('hp').value,
+                    engine: document.getElementById('engine').value,
+                    topSpeed: document.getElementById('topSpeed').value,
+                    image: document.getElementById('image').value
+                };
+
+                if (editIdInput.value) {
+                    const idx = currentCars.findIndex(c => c.id == editIdInput.value);
+                    if(idx !== -1) currentCars[idx] = newCar;
+                } else {
+                    currentCars.push(newCar);
+                }
+
+                if(window.db) db.saveCars(currentCars);
+                form.reset();
+                editIdInput.value = '';
+                renderInventory();
+                alert('ASSET DEPLOYED SUCCESSFULLY');
+            });
+
+            // GLOBAL HELPERS
+            window.deleteCar = (id) => {
+                if(confirm('PURGE ASSET DATA?')) {
+                    const currentCars = window.db ? db.getCars() : [];
+                    const filtered = currentCars.filter(c => c.id != id);
+                    if(window.db) db.saveCars(filtered);
+                    renderInventory();
+                }
+            };
+
+            window.editCar = (id) => {
+                if(!window.db) return;
+                const car = db.getCars().find(c => c.id == id);
+                if(!car) return;
+                document.getElementById('name').value = car.name;
+                document.getElementById('brand').value = car.brand;
+                document.getElementById('price').value = car.price;
+                document.getElementById('hp').value = car.hp;
+                document.getElementById('topSpeed').value = car.topSpeed;
+                document.getElementById('engine').value = car.engine;
+                document.getElementById('image').value = car.image;
+                editIdInput.value = car.id;
+                window.scrollTo(0, 0);
+            };
+
+            try {
+                if (typeof gsap !== 'undefined') {
+                    if (document.querySelectorAll('tr').length > 0) {
+                        gsap.from('tr', { opacity: 0, x: -20, stagger: 0.1, delay: 0.5 });
+                    }
+                }
+            } catch (e) { console.warn("GSAP Animations skipped", e); }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 100) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+    </script>
+</body>
+</html>

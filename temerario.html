@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temerario | Lamborghini.com</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .subnav-link { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #666; padding: 20px 24px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; text-decoration: none; font-family: inherit; }
+        .subnav-link:hover, .subnav-link.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
+        .model-subnav { position: sticky; top: var(--header-height); z-index: 900; background: #fff; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; padding: 0 60px; overflow-x: auto; scrollbar-width: none; }
+        .model-subnav::-webkit-scrollbar { display: none; }
+        /* Hero */
+        .model-hero { background: #000; height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; color: #fff; background-image: url('https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/temerario/2024/overview/lamborghini-temerario-front-side-view.png'); background-size: cover; background-position: center; }
+        .model-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.6; pointer-events: none; }
+        .model-hero-content { position: relative; z-index: 10; text-align: center; }
+        .hero-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(4rem, 10vw, 10rem); font-weight: 900; text-transform: uppercase; line-height: 0.8; margin-bottom: 15px; }
+        .hero-tagline { font-size: 14px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--lam-yellow); }
+
+        /* --- TEXT HOVER HIGHLIGHTS --- */
+        h1, h2, h3, p, span, .chart-label, .mini-stat-val, .premium-eyebrow, .menu-text {
+            transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        }
+        h1:hover, h2:hover, h3:hover, .hero-title:hover, .premium-title:hover {
+            color: #fff !important;
+            text-shadow: 0 0 20px #D4FF00, 0 0 40px rgba(212,255,0,0.6);
+            transform: translateY(-2px);
+        }
+        p:hover, span:hover, .chart-label:hover, .mini-stat-val:hover, .premium-eyebrow:hover, .menu-text:hover {
+            color: #fff !important;
+            text-shadow: 0 0 15px rgba(0,212,255,0.4);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <header class="lam-header" id="lam-header">
+        <a href="/models" class="header-left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
+            <span class="menu-text">MODELS</span>
+        </a>
+        <div class="header-center"><a href="/"><img class="logo-bull" src="https://www.lamborghini.com/sites/it-en/files/themes/custom/lamborghini/logo.png" alt="Lamborghini" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size:10px;font-weight:900;letter-spacing:0.2em;color:#fff;white-space:nowrap;\'>AUTOMOBILI LAMBORGHINI</span>'"></a></div>
+        <div class="header-right"><svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg></div>
+    </header>
+
+    <nav class="model-subnav">
+        <a href="#overview" class="subnav-link active">OVERVIEW</a>
+        <a href="#gallery" class="subnav-link">GALLERY</a>
+        <a href="#performance" class="subnav-link">PERFORMANCE</a>
+        <a href="#3dviewer" class="subnav-link">3D VIEWER</a>
+        <a href="#specs" class="subnav-link">SPECIFICATIONS</a>
+    </nav>
+
+    <section class="model-hero" id="overview">
+        <iframe class="model-hero-video" id="temerario-video" src="https://www.youtube.com/embed/RlxFvkRGpfc?autoplay=1&mute=1&loop=1&playlist=RlxFvkRGpfc&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+        <div class="model-hero-content">
+            <h1 class="hero-title">TEMERARIO</h1>
+            <p class="hero-tagline">YOU CAN'T HIDE WHO YOU ARE</p>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="premium-section">
+        <span class="premium-eyebrow">THE NEXT GENERATION</span>
+        <h2 class="premium-title">10,000 RPM<br>V8 REVOLUTION</h2>
+        <div class="premium-desc-block">
+            <strong>BEYOND THE LIMITS</strong>
+            The Temerario enters the world of super sports cars with a revolutionary electrified V8 powertrain. For the first time, a production engine can reach 10,000 RPM, delivering a sound and performance never heard before.
+        </div>
+    </section>
+
+    <!-- Image Gallery -->
+    <section class="image-gallery" id="gallery">
+        <div class="gallery-item"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/temerario/2024/overview/lamborghini-temerario-front-side-view.png" alt="Temerario Front"></div>
+        <div class="gallery-item"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/temerario/2024/overview/lamborghini-temerario-rear-side-view.png" alt="Temerario Rear"></div>
+        <div class="gallery-item"><img src="https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/models/temerario/2024/overview/lamborghini-temerario-cockpit.jpg" alt="Temerario Interior"></div>
+    </section>
+
+    <!-- Performance Chart -->
+    <section class="performance-chart" id="performance">
+        <div class="chart-grid">
+            <div class="chart-item">
+                <div class="chart-label">MAX ENGINE SPEED</div>
+                <div class="mini-stat-val">10,000 <span class="mini-stat-unit">RPM</span></div>
+                <div class="chart-bar-container"><div class="chart-bar" style="width: 100%;"></div></div>
+            </div>
+            <div class="chart-item">
+                <div class="chart-label">POWER (COMBINED)</div>
+                <div class="mini-stat-val">920 <span class="mini-stat-unit">CV</span></div>
+                <div class="chart-bar-container"><div class="chart-bar" style="width: 90%;"></div></div>
+            </div>
+            <div class="chart-item">
+                <div class="chart-label">ACCELERATION 0-100 KM/H</div>
+                <div class="mini-stat-val">2.7 <span class="mini-stat-unit">S</span></div>
+                <div class="chart-bar-container"><div class="chart-bar" style="width: 95%;"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-grid">
+        <div class="feature-card">
+            <h3 class="feature-title">ENGINE</h3>
+            <p class="feature-desc">The high-revving 4.0L twin-turbo V8 engine was developed entirely in Sant'Agata Bolognese, allowing for a peak RPM range previously reserved for race cars.</p>
+        </div>
+        <div class="feature-card">
+            <h3 class="feature-title">DESIGN</h3>
+            <p class="feature-desc">The design is a masterpiece of aerodynamic form and function, featuring new hexagonal daytime running lights and an integrated rear wing for optimal downforce.</p>
+        </div>
+        <div class="feature-card">
+            <h3 class="feature-title">INTERIOR</h3>
+            <p class="feature-desc">A cockpit designed for the digital native, featuring high-resolution displays and a more spacious cabin designed for both track and grand touring.</p>
+        </div>
+        <div class="feature-card">
+            <h3 class="feature-title">TECHNOLOGY</h3>
+            <p class="feature-desc">Featuring an advanced plug-in hybrid system with three electric motors, providing instantaneous torque and all-wheel drive stability.</p>
+        </div>
+    </section>
+
+    <!-- 3D Viewer -->
+    <section class="viewer-section" id="3dviewer">
+        <div class="viewer-header">
+            <h2 class="premium-title" style="font-size:3.5rem; margin-bottom:20px;">3D INTERACTIVE</h2>
+            <p style="color:#666; letter-spacing:0.2em;">DISCOVER THE DETAILS</p>
+        </div>
+        <div class="viewer-container">
+            <iframe class="viewer-iframe" src="https://sketchfab.com/models/2a138c41441b44c2b92a35368a0aacc5/embed?autostart=1&ui_theme=dark&dnt=1" allow="autoplay; fullscreen; vr"></iframe>
+        </div>
+    </section>
+
+    <!-- Specifications -->
+    <section class="specs-table-container" id="specs">
+        <table class="specs-table-premium">
+            <thead><tr><th colspan="2">TECHNICAL DATA</th></tr></thead>
+            <tbody>
+                <tr><td class="spec-label">POWERTRAIN</td><td class="spec-value">V8 Twin-Turbo + 3 Electric Motors</td></tr>
+                <tr><td class="spec-label">MAX. POWER (COMBINED)</td><td class="spec-value">920 CV (676 kW)</td></tr>
+                <tr><td class="spec-label">TOP SPEED</td><td class="spec-value">> 343 km/h</td></tr>
+                <tr><td class="spec-label">ACCELERATION 0-100 KM/H</td><td class="spec-value">2.7 s</td></tr>
+                <tr><td class="spec-label">DRY WEIGHT</td><td class="spec-value">1,690 kg</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <style>
+        .lam-footer {
+            background: url('hero-bg.png') center/cover no-repeat;
+            position: relative; padding: 40px 60px;
+        }
+        .lam-footer::before {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(0,0,0,0.7); z-index: 0;
+        }
+        .lam-footer > * { position: relative; z-index: 1; }
+        .footer-copyright { color: rgba(255,255,255,0.6); font-size: 11px; letter-spacing: 0.2em; }
+    </style>
+    <footer class="lam-footer">
+        <div class="footer-bottom"><p class="footer-copyright">&copy; 2026 Automobili Lamborghini S.p.A.</p></div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', () => {
+            document.getElementById('lam-header').classList.toggle('scrolled', window.scrollY > 50);
+            
+            // Activate chart bars
+            const charts = document.querySelectorAll('.chart-bar');
+            charts.forEach(bar => {
+                const rect = bar.getBoundingClientRect();
+                if(rect.top < window.innerHeight) {
+                    bar.style.width = bar.getAttribute('style').split('width: ')[1];
+                }
+            });
+        });
+    </script>
+</body>
+</html>

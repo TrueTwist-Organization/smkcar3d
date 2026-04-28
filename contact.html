@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | SMK CAR</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="footer-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --accent: #D71920;
+            --text-main: #FFFFFF;
+            --text-dim: #A0A0A5;
+            --glass: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 180px 40px 100px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+        }
+
+        .contact-info-side {
+            padding-right: 40px;
+        }
+
+        .section-eyebrow {
+            color: var(--accent);
+            font-weight: 800;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .contact-heading {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(40px, 6vw, 80px);
+            line-height: 0.95;
+            margin-bottom: 40px;
+            letter-spacing: 0.05em;
+        }
+
+        .contact-p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+        }
+
+        .details-list {
+            margin-top: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .detail-icon {
+            width: 50px; height: 50px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: var(--accent);
+        }
+
+        .detail-text h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-dim); margin-bottom: 4px; }
+        .detail-text p { font-size: 16px; font-weight: 600; }
+
+        /* Form Styling */
+        .contact-form-side {
+            background: var(--glass);
+            padding: 60px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            transition: 0.3s;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.02);
+            border: none;
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: 0.4s cubic-bezier(0.19,1,0.22,1);
+        }
+
+        .form-input:focus {
+            border-bottom-color: var(--accent);
+            padding-left: 10px;
+            background: rgba(215,25,32,0.03);
+        }
+
+        .form-input:focus + .form-label { color: var(--accent); }
+
+        textarea.form-input { min-height: 120px; resize: none; }
+
+        .btn-submit {
+            width: 100%;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 20px;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            cursor: pointer;
+            transition: 0.5s cubic-bezier(0.19,1,0.22,1);
+            margin-top: 20px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(215,25,32,0.3);
+        }
+
+        /* Nav and Logo */
+        .nav-fixed {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 30px 80px;
+            display: flex; justify-content: space-between;
+            align-items: center; z-index: 1000;
+            background: rgba(10,10,10,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px; letter-spacing: 0.4em;
+            color: #fff; text-decoration: none;
+            display: flex; align-items: center;
+        }
+        .nav-logo span { color: var(--accent); }
+
+        .back-btn {
+            color: #fff; text-decoration: none; font-size: 11px;
+            font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .back-btn:hover { color: var(--accent); }
+
+        @media (max-width: 1000px) {
+            .contact-container { grid-template-columns: 1fr; gap: 60px; padding-top: 140px; }
+            .nav-fixed { padding: 20px 40px; }
+            .contact-form-side { padding: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-fixed">
+        <a href="/" class="nav-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+        <a href="/" class="back-btn"><i data-lucide="arrow-left"></i> RETURN HOME</a>
+    </nav>
+
+    <main class="contact-container">
+        <div class="contact-info-side">
+            <span class="section-eyebrow">Connect With Us</span>
+            <h1 class="contact-heading">START YOUR<br>JOURNEY</h1>
+            <p class="contact-p">Whether you are looking to acquire a rare masterpiece or seeking an exclusive consultation, our specialists are ready to secure your automotive destiny.</p>
+            
+            <div class="details-list">
+                <div class="detail-item">
+                    <div class="detail-icon"><i data-lucide="mail"></i></div>
+                    <div class="detail-text">
+                        <h4>General Inquiries</h4>
+                        <p>contact@smkcar.com</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon"><i data-lucide="phone"></i></div>
+                    <div class="detail-text">
+                        <h4>VIP Hotline</h4>
+                        <p>+1 (800) SMK-CARS</p>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-icon"><i data-lucide="map-pin"></i></div>
+                    <div class="detail-text">
+                        <h4>Global Headquarters</h4>
+                        <p>123 Velocity Drive, Maranello, Italy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-form-side">
+            <form action="#">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Interested In</label>
+                    <input type="text" class="form-input" placeholder="Ex: Ferrari F80, Bugatti Bolide">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-input" placeholder="How can we assist you?"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">
+                    Send Inquiry <i data-lucide="send"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand-side">
+                <a href="/" class="footer-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
+                <p class="footer-tagline">The architects of your hyper-automotive destiny. Sourcing, verifying, and curating the most exclusive high-performance machines on the planet.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Navigate</h5>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/discover">Brands</a></li>
+                    <li><a href="/models">Models</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Collection</h5>
+                <ul>
+                    <li><a href="/revuelto">Lamborghini</a></li>
+                    <li><a href="/bugatti">Bugatti</a></li>
+                    <li><a href="/mclaren">McLaren</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Quick Links</h5>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/contact">Contact Us</a></li>
+                    <li><a href="/disclaimer">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copy">© 2026 SMK CAR AUTO GROUP. ALL RIGHTS RESERVED.</div>
+            <div class="footer-nav">
+                <a href="https://www.instagram.com/accounts/login/" target="_blank">Instagram</a>
+                <a href="https://www.facebook.com/login/" target="_blank">Facebook</a>
+                <a href="https://twitter.com/i/flow/login" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        gsap.from('.contact-info-side > *', { opacity: 0, x: -50, stagger: 0.2, duration: 1, ease: 'power3.out' });
+        gsap.from('.contact-form-side', { opacity: 0, x: 50, duration: 1, ease: 'power3.out', delay: 0.5 });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #D4AF37;
+  --gold-light: #EAD196;
+  --gold-dark: #AA820D;
+  --bg-dark: #000000;
+  --card-bg: #0a0a0a;
+  --accent-gold: 212, 175, 55;
+  --accent-red: 220, 38, 38;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-white font-body overflow-x-hidden;
+    background-color: var(--bg-dark);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading uppercase tracking-[0.2em] font-black;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .serif-lux {
+     font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  /* Cinematic Buttons */
+  .btn-gold {
+     @apply px-12 py-5 bg-luxury-gold text-black font-black uppercase tracking-[0.4em] text-[10px] transition-all duration-700 hover:bg-white hover:text-black border border-transparent active:scale-95;
+     box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+  }
+
+  .btn-bugatti-gold {
+     @apply px-12 py-5 bg-transparent border border-white/20 text-white font-black uppercase tracking-[0.4em] text-[10px] transition-all duration-700 hover:bg-white hover:text-black hover:border-white;
+  }
+
+  /* Glass Effects */
+  .glass-card {
+     @apply bg-white/5 backdrop-blur-xl border border-white/10 p-10;
+  }
+
+  .glass-nav {
+     @apply bg-black/80 backdrop-blur-2xl border-b border-white/5;
+  }
+}
+
+/* Luxury Animations */
+.glow-text {
+   text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+.text-glow-gold {
+   text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+/* Hide Scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: black;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+.vertical-text {
+   writing-mode: vertical-rl;
+   text-orientation: mixed;
+}
