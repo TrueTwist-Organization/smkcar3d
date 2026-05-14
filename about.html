@@ -142,9 +142,19 @@
 </head>
 <body>
 
-    <nav class="nav-fixed">
+    <nav class="nav-fixed" id="navbar">
         <a href="/" class="nav-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
-        <a href="/" class="back-btn"><i data-lucide="arrow-left"></i> RETURN HOME</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#about" class="active">About</a>
+            <a href="discover.html">Brands</a>
+            <a href="models.html">Cars</a>
+        </div>
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </nav>
 
     <header class="sub-hero">
@@ -246,6 +256,23 @@
                 nav.style.padding = '30px 80px';
                 nav.style.borderBottom = 'none';
             }
+        });
+
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
         });
     </script>
 </body>

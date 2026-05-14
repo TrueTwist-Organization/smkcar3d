@@ -531,7 +531,17 @@
     <!-- NAVBAR -->
     <nav id="nav">
         <a href="/" class="nav-logo logo"><img src="logo.png" class="brand-logo" alt="Logo">SMK <span>C</span>AR</a>
-        <a href="/" class="nav-back">← Return to Headquarters</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#about">About</a>
+            <a href="discover.html" class="active">Brands</a>
+            <a href="models.html">Cars</a>
+        </div>
+        <div class="nav-toggle" id="navToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </nav>
 
     <!-- HERO -->
@@ -854,8 +864,25 @@
 
         // ── NAVBAR ──
         const nav = document.getElementById('nav');
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.querySelector('.nav-links');
+
         window.addEventListener('scroll', () => {
             nav.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        if (navToggle) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
         });
 
         // ── 3D TILT on cards ──
