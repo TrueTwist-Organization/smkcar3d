@@ -40,6 +40,17 @@ const Footer = () => {
               </div>
            </div>
         </div>
+
+        {/* Credits */}
+        <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mt-12 pt-8 border-t border-white/5">
+           <p className="text-[8px] font-black text-white/20 tracking-[0.2em] uppercase text-center">
+              Design by <a href="https://truetwist.in" target="_blank" rel="noreferrer" className="text-white/40 hover:text-white transition-colors">truetwist.in</a>
+           </p>
+           <span className="hidden md:inline text-white/10">|</span>
+           <p className="text-[8px] font-black text-white/20 tracking-[0.2em] uppercase text-center">
+              Marketing by <a href="https://369network.com/" target="_blank" rel="noreferrer" className="text-white/40 hover:text-white transition-colors">369network.com</a>
+           </p>
+        </div>
       </div>
     </footer>
   );
