@@ -775,6 +775,28 @@
         color: rgba(255,255,255,0.4);
         text-transform: uppercase;
     }
+    .footer-attribution {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        color: rgba(255,255,255,0.3);
+        text-transform: uppercase;
+        margin-top: 5px;
+    }
+    .footer-attribution a {
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    .footer-attribution a:hover {
+        color: var(--accent, #D71920);
+    }
+    .footer-attribution .separator {
+        color: rgba(255,255,255,0.1);
+    }
     .footer-nav { display: flex; gap: 20px; }
     .footer-nav a {
         color: rgba(255,255,255,0.4);
@@ -834,6 +856,8 @@
         .brand-card:hover { flex: none; height: 420px; }
         .footer-grid { grid-template-columns: 1fr; gap: 36px; }
         .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+        .footer-attribution { flex-direction: column; gap: 8px; }
+        .footer-attribution .separator { display: none; }
     }
     </style>
 </head>
@@ -1053,6 +1077,11 @@
     </div>
     <div class="footer-bottom">
         <div class="footer-copy">© 2026 SMK CAR AUTO GROUP. ALL RIGHTS RESERVED.</div>
+        <div class="footer-attribution">
+            <span>design by <a href="https://truetwist.in" target="_blank">truetwist.in</a></span>
+            <span class="separator">|</span>
+            <span>marketing by <a href="https://369network.com/" target="_blank">369network.com</a></span>
+        </div>
         <div class="footer-nav">
             <a href="https://www.instagram.com/accounts/login/" target="_blank" aria-label="Instagram login"><i data-lucide="instagram"></i></a>
             <a href="https://www.facebook.com/login/" target="_blank" aria-label="Facebook login"><i data-lucide="facebook"></i></a>
